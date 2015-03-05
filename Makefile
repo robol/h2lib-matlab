@@ -1,10 +1,10 @@
 -include Makefile.inc
 
-CFLAGS= -IH2Lib
+CFLAGS= -g -IH2Lib/Library -D__MATLAB_TRICK
 LDFLAGS= -LH2Lib
 LIBS= -lh2
 
-MATLAB_MEX=hmatrix_create.mexa64
+MATLAB_MEX=hmatrix_create.mexa64 mvm_hmatrix_avector.mexa64
 
 all: $(MATLAB_MEX)
 

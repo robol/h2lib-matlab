@@ -4,7 +4,7 @@ CFLAGS= -IH2Lib
 LDFLAGS= -LH2Lib
 LIBS= -lh2
 
-MATLAB_MEX=hmatrix_create.mexa64 hmatrix_delete.mexa64
+MATLAB_MEX=hmatrix_create.mexa64
 
 all: $(MATLAB_MEX)
 

@@ -6,4 +6,4 @@ c = rand(4,1);
 d = rand(4,1);
 
 A = hmatrix_create(A11,A22,a,b,c,d);
-x = mvm_hmatrix_avector(A, [ 1; zeros(7,1) ])
+x = mvm_hmatrix_avector(A, [ zeros(7,1); 1 ])

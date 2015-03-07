@@ -14,6 +14,9 @@ hmatrix: hmatlab
 cluster: hmatlab
 	$(MAKE) -C @Cluster
 
+check:
+	$(MAKE) -C tests check
+
 clean:
 	$(MAKE) -C lib clean
 	$(MAKE) -C @HMatrix clean

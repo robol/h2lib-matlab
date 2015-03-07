@@ -29,7 +29,7 @@ echo "Selected $MEX_EXT as the extension for MEX files"
 
 BASE_DIR=$(pwd)
 
-echo "" > Makefile.inc
+echo "MATLAB_CMD=$MATLAB_CMD" > Makefile.inc
 echo "BASE_DIR=$BASE_DIR" >> Makefile.inc
 echo "MEX=$MEX" >> Makefile.inc
 echo "MEX_EXT=$MEX_EXT" >> Makefile.inc

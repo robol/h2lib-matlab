@@ -12,17 +12,19 @@
 void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
-  phmatrix A = (phmatrix) *((phmatrix*) mxGetData(prhs[0]));
-  phmatrix B = (phmatrix) *((phmatrix*) mxGetData(prhs[1]));
+  phmatrix A = DESERIALIZE_POINTER (mxGetProperty(prhs[0], 0, "hmatrix"));
+  phmatrix B = DESERIALIZE_POINTER (mxGetProperty(prhs[1], 0, "hmatrix"));
+
+  ptruncmode  tm = new_releucl_truncmode();
   phmatrix C = NULL;
+
   double * a = malloc (A->rc->size * sizeof(double));
   memset (a, 0, sizeof(double) * A->rc->size);
+
   C = create_tridiag_hmatrix (a, a, a, A->rc, A->cc);
   free (a);
-  /* C = new_hmatrix(A->rc,A->cc); */
-  ptruncmode  tm;
-  tm=new_releucl_truncmode();
+
   addmul_hmatrix(1.0,false,A,false,B,tm,eps,C);
-  plhs[0] = mxCreateNumericMatrix(1, 1, mxINT64_CLASS, mxREAL);
-  *((long long *) mxGetData(plhs[0])) = (long long) C;
+
+  SERIALIZE_POINTER (plhs[0], C);
 }

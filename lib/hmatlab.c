@@ -1,35 +1,24 @@
 #include "hmatlab.h"
 
-#define MIN_SIZE_THRESHOLD 4
 #define MATRIX_ELEM(A,i,j,n) A[(i)*(n)+(j)]
 
-static pcluster cluster_factory = NULL;
-
-static pcluster _create_cluster(int *a, int n)
+pcluster std_subdivision_scheme_cluster(int *a, int n, int k)
 {
   pcluster clust=NULL;
 
-  if(n <= MIN_SIZE_THRESHOLD)
+  if (n <= k)
     {
       clust = new_cluster(n, a, 0, 1);
     }
   else
     {
       clust=new_cluster(n,a,2,1);
-      clust->son[0]=_create_cluster(a,n/2);
-      clust->son[1]=_create_cluster(a+n/2,n-n/2);
+      clust->son[0] = std_subdivision_scheme_cluster (a, n/2, k);
+      clust->son[1] = std_subdivision_scheme_cluster (a+n/2,n-n/2, k);
   }
 
+  update_cluster (clust);
   return clust;
-}
-
-pcluster create_cluster(int *a, int n)
-{
-  if (cluster_factory == NULL) {
-    cluster_factory = _create_cluster(a,n);
-  }
-
-  return cluster_factory;
 }
 
 phmatrix create_tridiag_hmatrix (double * a, double * b, double * c, 
@@ -40,10 +29,11 @@ phmatrix create_tridiag_hmatrix (double * a, double * b, double * c,
 
   assert (rc->size == cc->size);
 
-  if (n <= MIN_SIZE_THRESHOLD)
+  if (rc->son == NULL && cc->son == NULL)
     {
-      A = new_full_hmatrix (rc, cc);
       int i;
+
+      A = new_full_hmatrix (rc, cc);
 
       memset (A->f->a, 0, sizeof (double) * n * n);
 

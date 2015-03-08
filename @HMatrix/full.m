@@ -1,5 +1,5 @@
 function H = full(P)
-  sz = size(P);
+  sz = matrix_size(P);
   n = sz(2);
   m = sz(1);
 

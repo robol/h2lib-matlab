@@ -1,16 +1,14 @@
 function c = mtimes(H, b)
-  sz = size(b);
-  
-  if (sz(2) == 1)
-      % Matrix vector product
-      c = mvm_hmatrix_avector(H, b);
+  if (isa(b, 'HMatrix'))
+    % TODO: We need to check that dimensions and clusters match. 
+    Cptr = hmatrix_prod (H, b);
+    c = HMatrix('pointer', Cptr);
   else
-      % Matrix matrix product. We consider the only case where b
-      % is a n x n matrix with the same dimensions of H, as of now. 
-      if (isa(b, 'HMatrix'))
-          % TODO: We need to check that dimensions and clusters match. 
-          Cptr = hmatrix_prod (H, b);
-          c = HMatrix('pointer', Cptr);
-      end
-  end
+    sz = size(b);
+
+    % TODO: Handle more columns as well
+    if (sz(2) == 1)
+      c = mvm_hmatrix_avector(H, b);
+    end
+  end	   
 end

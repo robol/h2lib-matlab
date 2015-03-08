@@ -1,6 +1,7 @@
 -include ../Makefile.inc
 
-MEX_FILES = 
+MEX_FILES = \
+	cluster_size$(MEX_EXT)
 
 
 all: $(MEX_FILES) private-dir

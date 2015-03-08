@@ -2,7 +2,7 @@ classdef HMatrix < handle
     %HMATRIX Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties
+    properties (Access = private)
         % Pointer to the hmatrix struct in C
         hmatrix
     end
@@ -29,6 +29,18 @@ classdef HMatrix < handle
             end
         end
         
+        function delete(obj)
+            release(obj);
+        end
+        
+        function disp(obj)
+            sz = matrix_size(obj);
+            fprintf('    HMatrix of size %d x %d\n\n', sz(1), sz(2));
+        end
+        
+    end
+    
+    methods (Access = private)
         function release(obj)
             delete_hmatrix(obj);
             obj.hmatrix = 0;

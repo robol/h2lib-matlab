@@ -13,8 +13,19 @@ classdef Cluster < handle
             std_subdivision_scheme (obj, n, k);
         end
         
+        function delete(obj)
+            release(obj);
+        end       
+        
+        function disp(obj)            
+            fprintf('    Cluster of size %d\n\n', cluster_size(obj));
+        end
+    end
+    
+    methods (Access = private)
         function release(c)
             delete_cluster(c);
+            obj.cluster = 0;
         end
     end
     

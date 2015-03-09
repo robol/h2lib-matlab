@@ -68,3 +68,10 @@ echo "CFLAGS= -g -I\$(BASE_DIR)/H2Lib/Library -I\$(BASE_DIR)/lib" >> Makefile.in
 echo "MATLAB_CFLAGS= -D__MATLAB_TRICK" >> Makefile.inc
 echo "LDFLAGS= -L\$(BASE_DIR)/lib -L\$(BASE_DIR)/H2Lib -Wl,-R\$(BASE_DIR)/H2Lib -Wl,-R\$(BASE_DIR)/lib" >> Makefile.inc
 echo "LIBS= -lh2" >> Makefile.inc
+
+echo "Configuration completed. Printing the content of Makefile.inc. Please adjust"
+echo "the constants if needed."
+echo ""
+
+echo "# Makefile.inc"
+cat Makefile.inc

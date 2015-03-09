@@ -1,6 +1,6 @@
 ps = 2;
 
-try; 
+% try 
 
 addpath('..');
 
@@ -37,5 +37,6 @@ fprintf (ps, ' > Residue of full(H * inv(H)) - I = %e\n', res);
 
 fprintf (ps, '\n');
 
-catch;
-end;
+% catch e
+%     fprintf (ps, 'Problem running the tests, please check them manully\n');
+% end;

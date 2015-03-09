@@ -11,6 +11,7 @@ fi
 
 # Try to find MATLAB
 MATLAB_CMD="$1"
+MEX="$2"
 if [ "$MATLAB_CMD" = "" ]; then
   MATLAB_CMD=$(command -v matlab)
 fi
@@ -43,19 +44,27 @@ if [ "$MATLAB_CMD" = "" ]; then
 
   if [ "$MATLAB_CMD" = "" ]; then
     echo "Cannot find MATLAB, please specify its path by using "
-    echo "./configure /path/to/MATLAB/bin/matlab"
+    echo "./configure /path/to/MATLAB/bin/matlab [/path/to/mex]"
     exit 1
   fi
 fi
 
 echo "Selected $MATLAB_CMD as the default Matlab environment"
 
-l=${#MATLAB_CMD}
-MEX=$(echo $MATLAB_CMD | awk 'l=$l { s=substr($0,l-6,l); printf s"mex"}')
-echo "Selected $MEX as the default mex compiler"
+if [ "$MEX" = "" ]; then
+  l=${#MATLAB_CMD}
+  MEX=$(echo $MATLAB_CMD | awk 'l=$l { s=substr($0,l-6,l); printf s"mex"}')
+  echo "Selected $MEX as the default mex compiler"
+fi
 
-# Get extension of MEX files
-MEX_EXT="."$($MATLAB_CMD -nodesktop -nojvm -nosplash -r "mexext; quit" | grep mex)
+# Get extension of MEX files. Try to detect the necessary arguments by detecting 
+# if you are running Matlab or Octave
+echo "$MATLAB_CMD" | grep "octave" > /dev/null
+if [ "$?" -eq "0" ]; then
+  MEX_EXT="."$($MATLAB_CMD --eval "fprintf('%s', mexext); quit" | grep mex)
+else
+  MEX_EXT="."$($MATLAB_CMD -nodesktop -nojvm -nosplash -r "mexext; quit" | grep mex)
+fi
 echo "Selected $MEX_EXT as the extension for MEX files"
 
 BASE_DIR=$(pwd)

@@ -22,3 +22,5 @@ clean:
 	$(MAKE) -C @HMatrix clean
 	$(MAKE) -C @Cluster clean
 
+distclean: clean
+	rm -f Makefile.inc

@@ -82,3 +82,21 @@ phmatrix create_tridiag_hmatrix (double * a, double * b, double * c,
 
   return A;
 }
+
+size_t hmatrix_get_rank (pchmatrix H)
+{
+  if (H->son)
+    return H->son[1]->r->A.cols;
+  else
+    return H->rc->size;
+}
+
+size_t hmatrix_get_m (pchmatrix H)
+{
+  return H->rc->size;
+}
+
+size_t hmatrix_get_n (pchmatrix H)
+{
+  return H->cc->size;
+}

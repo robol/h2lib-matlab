@@ -6,6 +6,10 @@
 #include <truncation.h>
 #include "hmatlab.h"
 
+#ifndef false
+#define false 0
+#endif
+
 
 #define eps 0.00000001
 

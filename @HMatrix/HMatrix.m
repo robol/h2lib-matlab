@@ -35,7 +35,9 @@ classdef HMatrix < handle
         
         function disp(obj)
             sz = matrix_size(obj);
-            fprintf('    HMatrix of size %d x %d\n\n', sz(1), sz(2));
+            fprintf('    HMatrix of size %d x %d, rank %d\n\n', ...
+                sz(1), sz(2), hmatrix_rank (obj));
+            disp(full(obj));
         end
         
     end

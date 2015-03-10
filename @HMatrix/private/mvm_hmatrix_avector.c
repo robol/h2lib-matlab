@@ -4,6 +4,10 @@
 #include <string.h>
 #include <hmatlab.h>
 
+#ifndef false
+#define false 0
+#endif
+
 void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {

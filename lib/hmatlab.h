@@ -32,6 +32,12 @@ pcluster std_subdivision_scheme_cluster (int * a, int n, int k);
 phmatrix create_tridiag_hmatrix (double * a, double * b, double * c, 
 				 pccluster rc, pccluster cc);
 
+size_t hmatrix_get_rank (pchmatrix H);
+
+size_t hmatrix_get_m (pchmatrix H);
+
+size_t hmatrix_get_n (pchmatrix H);
+
 #define SERIALIZE_POINTER_TO_PROPERTY(a, property, ptr) {		\
     mxArray * p = mxCreateNumericMatrix(1, 1, mxINT64_CLASS, mxREAL);	\
     *((long *) mxGetData(p)) = ((long) (ptr));				\

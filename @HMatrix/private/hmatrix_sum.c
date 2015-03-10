@@ -6,9 +6,6 @@
 #include <truncation.h>
 #include <hmatlab.h>
 
-
-#define eps 0.00000001
-
 void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
@@ -19,7 +16,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
   phmatrix C = clonestructure_hmatrix (B);
   copy_hmatrix (B, C);
 
-  add_hmatrix(1.0, A, tm, eps, C);
+  add_hmatrix(1.0, A, tm, h2lib_eps, C);
 
   SERIALIZE_POINTER (plhs[0], C);
 }

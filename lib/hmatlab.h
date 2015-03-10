@@ -7,6 +7,8 @@
 #ifndef _HMATLAB_H
 #define _HMATLAB_H
 
+#define h2lib_eps 1e-13
+
 /**
  * @brief Create an index cluster representing the standard subdivision
  * scheme obtained by recursively subdividing the segment by bisection

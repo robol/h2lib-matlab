@@ -65,7 +65,7 @@ H3 = H / H2;
 r = toc;
 
 tic;
-fH2 = fH / fH2;
+fH3 = fH / fH2;
 rf = toc;
 res = norm(fH3 - full(H3));
 fprintf (ps, ' > Residue of full(H + H2) - full(H) / full(H2) = %e\n', res);

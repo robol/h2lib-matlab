@@ -6,8 +6,6 @@
 #include <truncation.h>
 #include "hmatlab.h"
 
-#define eps 0.00000001
-
 void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
@@ -24,7 +22,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
   ptruncmode  tm;
   tm=new_releucl_truncmode();
 
-  invert_hmatrix (Ainv, B, tm, eps);
+  invert_hmatrix (Ainv, B, tm, h2lib_eps);
 
   del_hmatrix (B);
 

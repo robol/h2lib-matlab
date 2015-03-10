@@ -10,9 +10,6 @@
 #define false 0
 #endif
 
-
-#define eps 0.00000001
-
 void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
@@ -28,7 +25,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
   C = create_tridiag_hmatrix (a, a, a, A->rc, A->cc);
   free (a);
 
-  addmul_hmatrix(1.0,false,A,false,B,tm,eps,C);
+  addmul_hmatrix(1.0,false,A,false,B,tm,h2lib_eps,C);
 
   SERIALIZE_POINTER (plhs[0], C);
 }

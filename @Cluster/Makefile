@@ -7,7 +7,7 @@ MEX_FILES = \
 all: $(MEX_FILES) private-dir
 
 %$(MEX_EXT): %.c
-	$(MEX) -o $@ $(CFLAGS) $(MATLAB_CFLAGS) $< $(LDFLAGS) $(LIBS) -lhmatlab > /dev/null
+	$(MEX) -o $@ $(CFLAGS) $(MATLAB_CFLAGS) $< $(LDFLAGS) $(LIBS) $(MEX_LIBS) > /dev/null
 
 private-dir: 
 	$(MAKE) -C private

@@ -1,7 +1,8 @@
 -include ../Makefile.inc
 
 MEX_FILES = \
-    matrix_size$(MEX_EXT) 
+    matrix_size$(MEX_EXT) \
+    hmatrix_rank$(MEX_EXT)
 
 all: $(MEX_FILES) _private
 

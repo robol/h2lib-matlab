@@ -10,8 +10,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
   phmatrix A = DESERIALIZE_POINTER (mxGetProperty (prhs[0], 0, "hmatrix"));
-  phmatrix Ainv = clonestructure_hmatrix (A);
-  copy_hmatrix (A, Ainv);
+  phmatrix Ainv = clone_hmatrix (A);
 
   /* Allocate space for the inversion */
   double * a = malloc (sizeof(double) * A->rc->size);

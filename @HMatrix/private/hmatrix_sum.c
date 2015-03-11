@@ -13,8 +13,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
   phmatrix B = DESERIALIZE_POINTER (mxGetProperty (prhs[1], 0, "hmatrix"));
   ptruncmode tm = new_releucl_truncmode();
 
-  phmatrix C = clonestructure_hmatrix (B);
-  copy_hmatrix (B, C);
+  phmatrix C = clone_hmatrix (B);
 
   add_hmatrix(1.0, A, tm, h2lib_eps, C);
 

@@ -9,6 +9,11 @@ if [ -e Makefile.inc ]; then
   exit 0;
 fi
 
+if [ ! -d H2Lib ]; then
+  echo "H2Lib not found. Please adjust the variables in Makefile.inc"
+  echo "to match the path of your installation."
+fi
+
 # Try to find MATLAB
 MATLAB_CMD="$1"
 MEX="$2"
@@ -77,6 +82,7 @@ echo "CFLAGS= -g -I\$(BASE_DIR)/H2Lib/Library -I\$(BASE_DIR)/lib" >> Makefile.in
 echo "MATLAB_CFLAGS= -D__MATLAB_TRICK" >> Makefile.inc
 echo "LDFLAGS= -L\$(BASE_DIR)/lib -L\$(BASE_DIR)/H2Lib -Wl,-R\$(BASE_DIR)/H2Lib -Wl,-R\$(BASE_DIR)/lib" >> Makefile.inc
 echo "LIBS= -lh2" >> Makefile.inc
+echo "MEX_LIBS= -lhmatlab" >> Makefile.inc
 
 echo "Configuration completed. Printing the content of Makefile.inc. Please adjust"
 echo "the constants if needed."

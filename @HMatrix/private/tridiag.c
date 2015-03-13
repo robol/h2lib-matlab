@@ -10,7 +10,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
 {
   pcluster rc = DESERIALIZE_POINTER (mxGetProperty (prhs[1], 0, "cluster"));
   pcluster cc = DESERIALIZE_POINTER (mxGetProperty (prhs[2], 0, "cluster"));
-				     
+
   phmatrix A = create_tridiag_hmatrix (mxGetPr(prhs[3]), mxGetPr(prhs[4]), 
 			               mxGetPr(prhs[5]), rc, cc);
 

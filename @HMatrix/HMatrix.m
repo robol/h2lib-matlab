@@ -2,7 +2,7 @@ classdef HMatrix < handle
     %HMATRIX Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties (Access = private)
+    properties
         % Pointer to the hmatrix struct in C
         hmatrix
     end

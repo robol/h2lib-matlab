@@ -54,11 +54,15 @@ if [ "$MATLAB_CMD" = "" ]; then
   fi
 fi
 
+if [ -L "$MATLAB_CMD" ]; then
+  MATLAB_CMD=$(readlink $MATLAB_CMD)
+fi
+
 echo "Selected $MATLAB_CMD as the default Matlab environment"
 
 if [ "$MEX" = "" ]; then
-  l=${#MATLAB_CMD}
-  MEX=$(echo $MATLAB_CMD | awk 'l=$l { s=substr($0,l-6,l); printf s"mex"}')
+  l="${#MATLAB_CMD}"
+  MEX=$(echo $MATLAB_CMD | awk "l=$l { s=substr(\$0,0,l-6); printf s\"mex\"}")
   echo "Selected $MEX as the default mex compiler"
 fi
 

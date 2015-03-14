@@ -11,7 +11,6 @@
 void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
-  /* phmatrix A = (phmatrix) *((phmatrix*) mxGetData(prhs[0])); */
   phmatrix A = DESERIALIZE_POINTER (mxGetProperty (prhs[0], 0, "hmatrix"));
   double * v = mxGetPr(prhs[1]);
 

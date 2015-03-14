@@ -21,14 +21,12 @@ void mexFunction(int nlhs, mxArray *plhs[],
   pavector pav = init_pointer_avector(&av, v, n);
 
   avector y;
-  pavector py = init_avector (&y, n);
+  plhs[0] = mxCreateDoubleMatrix(n, 1, mxREAL);
+  pavector py = init_pointer_avector (&y, mxGetPr(plhs[0]), n);
   fill_avector (py, 0);
 
   mvm_hmatrix_avector (1.0, false, A, pav, py);
 
-  plhs[0] = mxCreateDoubleMatrix(n, 1, mxREAL);
-  memcpy (mxGetPr(plhs[0]), py->v, n * sizeof(double)); 
- 
   uninit_avector(pav);
   uninit_avector(py);
 }

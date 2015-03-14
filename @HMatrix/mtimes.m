@@ -2,7 +2,7 @@ function c = mtimes(H, b)
   if (isa(b, 'HMatrix'))
     % TODO: We need to check that dimensions and clusters match. 
     Cptr = hmatrix_prod (H, b);
-    c = HMatrix('pointer', Cptr);
+    c = HMatrix('pointer', Cptr, H.row_cluster, b.col_cluster);
   else
     sz = size(b);
 

@@ -3,14 +3,24 @@ classdef HMatrix < handle
     %   Detailed explanation goes here
     
     properties
+        % Row cluster object. This is held here to make sure
+        % that we keep a reference of it around, preventing its
+        % deletion. 
+        row_cluster
+        
+        % Column cluster object. The same of above holds. 
+        col_cluster
+        
         % Pointer to the hmatrix struct in C
         hmatrix
     end
     
     methods
-        function obj = HMatrix(varargin)
+        function obj = HMatrix(varargin)            
             if (length (varargin) < 1)
                 obj.hmatrix = 0;
+                obj.row_cluster = 0;
+                obj.col_cluster = 0;
             else
                 kind = varargin{1};
                 
@@ -21,8 +31,12 @@ classdef HMatrix < handle
                             return;
                         end
                         tridiag (obj, varargin{2}, varargin{3}, varargin{4}, varargin{5}, varargin{6});
+                        obj.row_cluster = varargin{2};
+                        obj.col_cluster = varargin{3};
                     case 'pointer'
                         obj.hmatrix = varargin{2};
+                        obj.row_cluster = varargin{3};
+                        obj.col_cluster = varargin{4};
                     otherwise
                         fprintf ('Unsupported matrix kind specified');
                 end
@@ -44,8 +58,10 @@ classdef HMatrix < handle
     
     methods (Access = private)
         function release(obj)
-            delete_hmatrix(obj);
-            obj.hmatrix = 0;
+            if obj.hmatrix ~= 0
+                delete_hmatrix(obj);
+                obj.hmatrix = 0;
+            end
         end
     end
     

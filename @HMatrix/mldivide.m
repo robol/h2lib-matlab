@@ -3,7 +3,7 @@ function M = mldivide(H, A)
         l = hmatrix_mldivide(H,A);
         M = [];
         for i = 1 : size(A,2)
-          M = [ M, HMatrix('pointer', l(i)) ];
+          M = [ M, HMatrix('pointer', l(i), H.row_cluster, A.col_cluster) ];
         end
     else
         % TODO: Implement this as a linear system solver. 

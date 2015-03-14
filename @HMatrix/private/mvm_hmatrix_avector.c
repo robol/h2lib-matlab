@@ -18,8 +18,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
   int n = mxGetM(prhs[1]);
 
   avector av;
-  pavector pav = init_avector(&av, n);
-  pav->v = v;
+  pavector pav = init_pointer_avector(&av, v, n);
 
   avector y;
   pavector py = init_avector (&y, n);
@@ -28,5 +27,8 @@ void mexFunction(int nlhs, mxArray *plhs[],
   mvm_hmatrix_avector (1.0, false, A, pav, py);
 
   plhs[0] = mxCreateDoubleMatrix(n, 1, mxREAL);
-  memcpy (mxGetPr(plhs[0]), py->v, n * sizeof(double));  
+  memcpy (mxGetPr(plhs[0]), py->v, n * sizeof(double)); 
+ 
+  uninit_avector(pav);
+  uninit_avector(py);
 }

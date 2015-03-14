@@ -9,7 +9,8 @@ MEX_FILES = \
     hmatrix_prod$(MEX_EXT)	        \
     hmatrix_inv$(MEX_EXT)		\
     delete_hmatrix$(MEX_EXT) 		\
-    hmatrix_minus$(MEX_EXT)
+    hmatrix_minus$(MEX_EXT)	       \
+    hmatrix_mldivide$(MEX_EXT)
 
 all: $(MEX_FILES)
 

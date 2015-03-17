@@ -28,11 +28,23 @@ pcluster std_subdivision_scheme_cluster (int * a, int n, int k);
  * matrix.
  *
  * @param a The diagonal entries of the matrix.
- * @param b The superdiagonal entries of the matrix.
- * @param c The subdiagonal entries of the matrix.
+ * @param b The subdiagonal entries of the matrix.
+ * @param c The superdiagonal entries of the matrix.
  */
 phmatrix create_tridiag_hmatrix (double * a, double * b, double * c,
 				 pccluster rc, pccluster cc);
+
+/**
+ * @brief Create a hierarichal matrix representing a (p,q)-band matrix
+ * matrix.
+ *
+ * @param a The diagonal entries of the matrix.
+ * @param b The subdiagonal entries of the matrix. Stored as the subcolumns of the matrix and with the last n-p columns filled by zeros to allow recursion.
+ * @param c The superdiagonal entries of the matrix. Stored as the superrows of the matrix and with the last n-q rows filled by zeros to allow recursion.
+ */
+
+phmatrix create_band_hmatrix (double * a, double * b, double * c, int p, int q,
+			         pccluster rc, pccluster cc);
 
 /**
  * @brief Obtain the quasiseparable rank of the hierarchical matrix H. 

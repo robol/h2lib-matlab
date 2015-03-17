@@ -26,13 +26,15 @@ classdef HMatrix < handle
                 
                 switch (kind)
                     case 'tridiagonal'
-                        if (length(varargin) < 4)
+                        if (length(varargin) < 6)
                             fprintf ('You need to specify exactly 3 vectors for tridiagonal shape');
                             return;
                         end
                         tridiag (obj, varargin{2}, varargin{3}, varargin{4}, varargin{5}, varargin{6});
                         obj.row_cluster = varargin{2};
                         obj.col_cluster = varargin{3};
+                    case 'band'
+                        create_band_hmatrix(obj, varargin{:});
                     case 'pointer'
                         obj.hmatrix = varargin{2};
                         obj.row_cluster = varargin{3};
@@ -57,6 +59,39 @@ classdef HMatrix < handle
     end
     
     methods (Access = private)
+        function create_band_hmatrix(obj, varargin)
+            if (length(varargin) < 6)
+                fprintf ('You need to specify exactly 3 vectors and 2 integers for band shape');
+                return;
+            end
+
+            if length(varargin) == 6
+                p = varargin{5};
+                q = varargin{6};
+                A = varargin{4};
+                n = size(A,1);
+                L = zeros(p,n-1);
+                U = zeros(q,n-1);
+                for i = 1 : p
+                    L(i,1:n-i) = diag(A,-i);
+                end
+                for i = 1 : q
+                    U(i,1:n-i) = diag(A,i);
+                end
+                d = diag(A);
+            else
+                L = varargin{5};
+                U = varargin{6};
+                p = varargin{7};
+                q = varargin{8};
+                d = varargin{4};
+            end
+			
+            band (obj, varargin{2}, varargin{3}, d, L, U, p, q);
+            obj.row_cluster = varargin{2};
+            obj.col_cluster = varargin{3};            
+        end
+
         function release(obj)
             if obj.hmatrix ~= 0
                 delete_hmatrix(obj);

@@ -1,5 +1,7 @@
 #include "hmatlab.h"
 
+extern double ddot(long * n, double *, long *, double *, long *);
+
 #define MATRIX_ELEM(A,i,j,n) A[(j)*(n)+(i)]
 
 pcluster std_subdivision_scheme_cluster(int *a, int n, int k)
@@ -167,6 +169,103 @@ phmatrix create_band_hmatrix (double * a, double * b, double * c, int p, int q,
 
   return A;
 }
+
+phmatrix create_generators_hmatrix (double * d, double * U, double * V,  double * W, double * Z,
+			         int ksub,  int ksup, pccluster rc, pccluster cc)
+{
+  int n = rc->size;
+  phmatrix A = NULL;
+  int i, j, t;
+
+  assert (rc->size == cc->size);
+
+  if (rc->son == NULL && cc->son == NULL)
+    {
+      A = new_full_hmatrix (rc, cc);
+
+      memset (A->f->a, 0, sizeof (double) * n * n);
+
+      for (i = 0; i < n; i++)
+	{
+          for (j=0; j < i; j++)
+            {
+              for (t=0; t < ksub; t++)
+                {
+                  MATRIX_ELEM(A->f->a, i, j, n) += U[i * ksub + t] * V[j * ksub + t];
+                }
+            }
+          for (j=i+1; j < n; j++)
+            {
+              for (t=0; t < ksup; t++)
+                {
+                  MATRIX_ELEM(A->f->a, i, j, n) += W[i * ksup + t] * Z[j * ksup + t];
+                }
+            }
+          MATRIX_ELEM(A->f->a, i, i, n) = d[i];	
+	}
+
+      update_hmatrix (A);
+    }
+  else 
+    {
+      /* Perform subdivision */
+      A = new_super_hmatrix (rc, cc, 2, 2);
+
+      phmatrix A11 = create_generators_hmatrix (d,U,V,W,Z,ksub,ksup, rc->son[0], cc->son[0]);
+      phmatrix A22 = create_generators_hmatrix (d + rc->son[0]->size, 
+				             U + rc->son[0]->size * ksub,
+				             V + cc->son[0]->size * ksub,
+				             W + rc->son[0]->size * ksup,
+				             Z + cc->son[0]->size * ksup,
+				             ksub, ksup, rc->son[1], cc->son[1]);
+
+      phmatrix A12 = new_rk_hmatrix (rc->son[0], cc->son[1], ksup);
+      phmatrix A21 = new_rk_hmatrix (rc->son[1], cc->son[0], ksub);
+      memset (A12->r->A.a, 0, sizeof (double) * rc->son[0]->size * ksup);
+      memset (A12->r->B.a, 0, sizeof (double) * cc->son[1]->size * ksup);
+      memset (A21->r->A.a, 0, sizeof (double) * rc->son[1]->size * ksub);
+      memset (A21->r->B.a, 0, sizeof (double) * cc->son[0]->size * ksub);
+
+      /* Fill in the low rank parts */
+      for (i=0; i < rc->son[0]->size; i++)
+        {
+          for(j=0; j < ksup; j++)
+            {
+              A12->r->A.a[j * rc->son[0]->size + i] = W[i * ksup +j];
+            }
+        }
+      for (i=0; i < cc->son[1]->size; i++)
+        {
+          for(j=0; j < ksup; j++)
+            {
+              A12->r->B.a[j * cc->son[1]->size + i] = Z[cc->son[0]->size * ksup + i * ksup + j];
+            }
+        }
+      for (i=0; i < rc->son[1]->size; i++)
+        {
+          for(j=0; j < ksub; j++)
+            {
+              A21->r->A.a[j * rc->son[1]->size + i] = U[rc->son[0]->size * ksub + i * ksub + j];
+            }
+        }
+      for (i=0; i < cc->son[0]->size; i++)
+        {
+          for(j=0; j < ksub; j++)
+            {
+              A21->r->B.a[j * cc->son[0]->size + i] = V[i * ksub +j];
+            }
+        }
+      ref_hmatrix(&A->son[0], A11);
+      ref_hmatrix(&A->son[1], A21);
+      ref_hmatrix(&A->son[2], A12);
+      ref_hmatrix(&A->son[3], A22);
+
+      update_hmatrix (A);
+    }
+
+  return A;
+}
+
 
 size_t hmatrix_get_rank (pchmatrix H)
 {

@@ -11,7 +11,8 @@ MEX_FILES = \
     delete_hmatrix$(MEX_EXT) 		\
     hmatrix_minus$(MEX_EXT)	        \
     hmatrix_mldivide$(MEX_EXT)          \
-    band$(MEX_EXT)
+    band$(MEX_EXT)                      \
+    generators$(MEX_EXT)
 
 all: $(MEX_FILES)
 

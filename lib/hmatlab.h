@@ -36,7 +36,7 @@ phmatrix create_tridiag_hmatrix (double * a, double * b, double * c,
 
 /**
  * @brief Create a hierarichal matrix representing a (p,q)-band matrix
- * matrix.
+ * 
  *
  * @param a The diagonal entries of the matrix.
  * @param b The subdiagonal entries of the matrix. Stored as the subcolumns of the matrix and with the last n-p columns filled by zeros to allow recursion.
@@ -45,6 +45,19 @@ phmatrix create_tridiag_hmatrix (double * a, double * b, double * c,
 
 phmatrix create_band_hmatrix (double * a, double * b, double * c, int p, int q,
 			         pccluster rc, pccluster cc);
+
+/**
+ * @brief Create a hierarichal matrix representing a (U^t,V^t,W^t,Z^t)-generator matrix ( i.e. tril(A)= U^t V, triu(A)=W^t Z and diag(A)=d )
+ * 
+ *
+ * @param d The diagonal entries of the matrix.
+ * @param U,V the subdiagonal generators  of the matrix. 
+ * @param W,Z the superdiagonal generators  of the matrix.
+ * @param ksub,ksup the sub and superdiagonal rank of the matrix.
+ */
+
+phmatrix create_generators_hmatrix (double * d, double * U, double * V, double * W, double * Z,
+			         int ksub, int ksup, pccluster rc, pccluster cc);
 
 /**
  * @brief Obtain the quasiseparable rank of the hierarchical matrix H. 

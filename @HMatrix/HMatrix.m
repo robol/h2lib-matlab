@@ -35,6 +35,14 @@ classdef HMatrix < handle
                         obj.col_cluster = varargin{3};
                     case 'band'
                         create_band_hmatrix(obj, varargin{:});
+                    case 'generators'
+                        if (length(varargin) < 10)
+                            fprintf ('You need to specify exactly 5 vectors and 2 integers for generators shape');
+                            return;
+                        end
+	                generators (obj, varargin{2}, varargin{3}, varargin{4}, varargin{5}, varargin{6}, varargin{7}, varargin{8}, varargin{9}, varargin{10});
+                        obj.row_cluster = varargin{2};
+                        obj.col_cluster = varargin{3};
                     case 'pointer'
                         obj.hmatrix = varargin{2};
                         obj.row_cluster = varargin{3};

@@ -24,6 +24,8 @@ A0=HMatrix('tridiagonal',rc,rc,ones(n,1)-diag(A),-diag(A,1),-diag(A,-1));
 C0=HMatrix('tridiagonal',rc,rc,diag(C),diag(C,1),diag(C,-1));
 AC=HMatrix('tridiagonal',rc,rc,ones(n,1)-diag(A),-diag(A,1),-diag(A,-1));
 
+
+
 for i=1:it
     
     %AA = inv(A0);

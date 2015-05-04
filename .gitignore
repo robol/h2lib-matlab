@@ -1,2 +1,5 @@
 Makefile.inc
 H2Lib
+*.mexa64
+*~
+*.so

@@ -7,7 +7,7 @@
 #ifndef _HMATLAB_H
 #define _HMATLAB_H
 
-#define h2lib_eps 1e-13
+#define h2lib_eps (getenv("H2LIB_EPS") == NULL ? 1.0e-13 : strtod(getenv("H2LIB_EPS"), NULL))
 
 /**
  * @brief Create an index cluster representing the standard subdivision

@@ -1,6 +1,8 @@
 #include <avector.h>
 #include <hmatrix.h>
 #include <cluster.h>
+#include <clusterbasis.h>
+#include <h2matrix.h>
 #include <string.h>
 #include <truncation.h>
 
@@ -89,6 +91,9 @@ size_t hmatrix_get_m (pchmatrix H);
  * @return An integer representing the number of columns. 
  */
 size_t hmatrix_get_n (pchmatrix H);
+
+pclusterbasis create_tridiag_clusterbasis(pccluster rc);
+ph2matrix create_tridiag_h2matrix (double * a, double * b, double * c, pccluster rc, pccluster cc, pclusterbasis brc, pclusterbasis bcc);
 
 /**
  * @brief Macro used to serialize pointers in classdef-objects properties

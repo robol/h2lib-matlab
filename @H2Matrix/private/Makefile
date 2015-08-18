@@ -2,7 +2,8 @@
 
 MEX_FILES = \
     mvm_h2matrix_avector$(MEX_EXT)   	\
-    tridiag$(MEX_EXT)       	\
+    tridiag$(MEX_EXT)       		\
+    h2matrix_sum$(MEX_EXT)		\
 
 all: $(MEX_FILES)
 

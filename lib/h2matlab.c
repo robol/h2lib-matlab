@@ -103,4 +103,3 @@ pclusterbasis create_tridiag_clusterbasis(pccluster rc)
 
   return clust;
 }
-

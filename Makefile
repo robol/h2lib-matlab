@@ -1,6 +1,6 @@
 -include Makefile.inc
 
-all: Makefile.inc hmatlab hmatrix cluster
+all: Makefile.inc hmatlab hmatrix cluster h2matrix
 
 Makefile.inc:
 	$(error "Makefile.inc not present, please run ./configure before make")
@@ -10,6 +10,9 @@ hmatlab:
 
 hmatrix: hmatlab
 	$(MAKE) -C @HMatrix
+
+h2matrix: hmatlab
+	$(MAKE) -C @H2Matrix
 
 cluster: hmatlab
 	$(MAKE) -C @Cluster

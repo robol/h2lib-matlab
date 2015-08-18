@@ -1,6 +1,7 @@
 -include ../Makefile.inc
 
 MEX_FILES = \
+	matrix_size$(MEX_EXT)
 
 all: $(MEX_FILES) _private
 

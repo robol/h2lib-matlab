@@ -12,15 +12,14 @@ ph2matrix create_tridiag_h2matrix (double * a, double * b, double * c, pccluster
   if (brc == NULL)
     {
       brc = create_tridiag_clusterbasis (rc);
-      update_clusterbasis (brc);
+      update_tree_clusterbasis (brc);
     }
 
   if (bcc == NULL)
     {
-      pclusterbasis bcc = create_tridiag_clusterbasis (cc);
-      update_clusterbasis (bcc);
+      bcc = create_tridiag_clusterbasis (cc);
+      update_tree_clusterbasis (bcc);
     }
-
 
   if (rc->son == NULL && cc->son == NULL)
     {
@@ -38,7 +37,7 @@ ph2matrix create_tridiag_h2matrix (double * a, double * b, double * c, pccluster
 	  MATRIX_ELEM(A->f->a, i, i + 1, n) = c[i];
 	}
 
-      update_h2matrix (A);
+      update_h2matrix (A);      
     }
   else 
     {
@@ -53,6 +52,9 @@ ph2matrix create_tridiag_h2matrix (double * a, double * b, double * c, pccluster
 
       ph2matrix A12 = new_uniform_h2matrix (brc->son[0], bcc->son[1]);
       ph2matrix A21 = new_uniform_h2matrix (brc->son[1], bcc->son[0]);
+
+      init_zero_amatrix (&A12->u->S, 2, 2);
+      init_zero_amatrix (&A21->u->S, 2, 2);
 
       A12->u->S.a[1] = c[cc->son[0]->size - 1];
       A21->u->S.a[2] = b[rc->son[0]->size - 1];
@@ -78,7 +80,7 @@ pclusterbasis create_tridiag_clusterbasis(pccluster rc)
   if (rc->sons == 0)
     {
       clust = new_clusterbasis(rc);
-      clust->k = 1;
+      clust->k = 2;
       init_zero_amatrix (&clust->V, rc->size, 2);
       clust->V.a[0] = 1;
       MATRIX_ELEM(clust->V.a, n-1, 1, n) = 1;
@@ -89,13 +91,14 @@ pclusterbasis create_tridiag_clusterbasis(pccluster rc)
 
       clust->son[0] = create_tridiag_clusterbasis (rc->son[0]);
       init_zero_amatrix (&clust->son[0]->E, 2, 2);
-      clust->son[0]->E.a[0] = 1;
+      clust->son[0]->E.a[0] = 1;     
 
       clust->son[1] = create_tridiag_clusterbasis (rc->son[1]);
       init_zero_amatrix (&clust->son[1]->E, 2, 2);
       clust->son[1]->E.a[3] = 1;
 
       clust->sons = 2;
+      clust->k = 2;
   }
 
   return clust;

@@ -96,6 +96,21 @@ pclusterbasis create_tridiag_clusterbasis(pccluster rc);
 ph2matrix create_tridiag_h2matrix (double * a, double * b, double * c, pccluster rc, pccluster cc, pclusterbasis brc, pclusterbasis bcc);
 
 /**
+ * @brief Obtain the quasiseparable rank of the hierarchical H2matrix H. 
+ * 
+ * Currently this routine is implemented in a suboptimal way so that it
+ * returns the rank of the first son of H. This can be a good guess for
+ * quasiseparability rank in the general case, but there is guarantee. 
+ *
+ * A good implementation should walk all the tree and take the maximum on the
+ * ranks. 
+ * 
+ * @param H The h2matrix whose rank should be obtained. 
+ * @return The QS rank of H.
+ */
+size_t h2matrix_get_rank (pch2matrix H);
+
+/**
  * @brief Macro used to serialize pointers in classdef-objects properties
  * in MATLAB. 
  */

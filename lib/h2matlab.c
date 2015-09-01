@@ -103,3 +103,10 @@ pclusterbasis create_tridiag_clusterbasis(pccluster rc)
 
   return clust;
 }
+
+
+size_t
+h2matrix_get_rank (pch2matrix H)
+{
+  return 1;
+}

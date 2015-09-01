@@ -18,7 +18,7 @@ classdef H2Matrix < handle
     methods
         function obj = H2Matrix(varargin)            
             if (length (varargin) < 1)
-                obj.hmatrix = 0;
+                obj.h2matrix = 0;
                 obj.row_cluster = 0;
                 obj.col_cluster = 0;
             else
@@ -50,7 +50,7 @@ classdef H2Matrix < handle
                         k = size(U,2);
                         generators (obj, varargin{2}, varargin{3}, arrayfun(@(i) U(i,:)*V(i,:)', 1 : n), U', V', U', V', k, k)
                     case 'pointer'
-                        obj.hmatrix = varargin{2};
+                        obj.h2matrix = varargin{2};
                         obj.row_cluster = varargin{3};
                         obj.col_cluster = varargin{4};
                     otherwise
@@ -66,7 +66,7 @@ classdef H2Matrix < handle
         function disp(obj)
             sz = matrix_size(obj);
             fprintf('    HMatrix of size %d x %d, rank %d\n\n', ...
-                sz(1), sz(2), hmatrix_rank (obj));
+                sz(1), sz(2), h2matrix_rank (obj));
             disp(full(obj));
         end
         
@@ -107,9 +107,9 @@ classdef H2Matrix < handle
         end
 
         function release(obj)
-            if obj.hmatrix ~= 0
-                delete_hmatrix(obj);
-                obj.hmatrix = 0;
+            if obj.h2matrix ~= 0
+                delete_h2matrix(obj);
+                obj.h2matrix = 0;
             end
         end
     end

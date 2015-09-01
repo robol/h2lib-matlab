@@ -15,7 +15,9 @@ void mexFunction(int nlhs, mxArray *plhs[],
   ptruncmode tm = new_releucl_truncmode();
   int i, n = A->cb->t->size;
 
-  ph2matrix C = clone_h2matrix (B, B->rb, B->cb);
+  pclusterbasis cbcopy = clone_clusterbasis (B->cb);
+  pclusterbasis rbcopy = clone_clusterbasis (B->rb);
+  ph2matrix C = clone_h2matrix (B, rbcopy, cbcopy);
 
   pclusteroperator rop = prepare_row_clusteroperator (C->rb, C->cb, tm);
   pclusteroperator cop = prepare_col_clusteroperator (C->rb, C->cb, tm);

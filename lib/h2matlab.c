@@ -108,5 +108,5 @@ pclusterbasis create_tridiag_clusterbasis(pccluster rc)
 size_t
 h2matrix_get_rank (pch2matrix H)
 {
-  return 1;
+  return H->son[1]->cb->k;
 }

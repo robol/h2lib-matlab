@@ -15,9 +15,9 @@ void mexFunction(int nlhs, mxArray *plhs[],
   ptruncmode tm = new_releucl_truncmode();
   int i, n = A->cb->t->size;
 
-  pclusterbasis cbcopy = clone_clusterbasis (B->cb);
-  pclusterbasis rbcopy = clone_clusterbasis (B->rb);
-  ph2matrix C = clone_h2matrix (B, rbcopy, cbcopy);
+  pclusterbasis cbcopy = clone_clusterbasis (A->cb);
+  pclusterbasis rbcopy = clone_clusterbasis (A->rb);
+  ph2matrix C = clone_h2matrix (A, rbcopy, cbcopy);
 
   pclusteroperator rop = prepare_row_clusteroperator (C->rb, C->cb, tm);
   pclusteroperator cop = prepare_col_clusteroperator (C->rb, C->cb, tm);
@@ -29,12 +29,11 @@ void mexFunction(int nlhs, mxArray *plhs[],
 
   for (i = 0; i < n; i++) 
     ones[i] = 1.0;
-
-  pclusterbasis ircb = clone_clusterbasis (A->cb);
-  pclusterbasis iccb = clone_clusterbasis (A->rb);
-  ph2matrix I = create_tridiag_h2matrix (ones, zeros, zeros, A->cb->t, A->rb->t, ircb, iccb);
   
-  addmul_h2matrix (1.0, I, false, A, C, rop, cop, tm, h2lib_eps);
+  
+  ph2matrix I = create_tridiag_h2matrix (ones, zeros, zeros, B->rb->t, B->cb->t, NULL, NULL);
+  
+  addmul_h2matrix (-1.0, I, false, B, C, rop, cop, tm, h2lib_eps);
 
   free (ones);
   free (zeros);

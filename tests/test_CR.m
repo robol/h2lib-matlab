@@ -44,6 +44,8 @@ for i=1:it
 	A0=A1;
 	B0=B1;
 	C0=C1;	
+    
+    hmatrix_rank(A0)
 
 end 
 

@@ -35,19 +35,17 @@ for i=1:it
     % tB = AA * B0;
     % tC = AA * C0;
     t = A0 \ [ B0, C0 ];
-    fprintf('bobo\n');
     % t = [ tB, tC ];
     B1 = B0 * t(1);
     C1 = C0 * t(2);
-    fprintf('bobob\n');
     A1 = A0 - B0*t(2) - C0*t(1);
-    fprintf('bobobo\n');
     AC = AC - C0*t(1);
-    fprintf('bobobobo\n');
     %fprintf ('A1 rank: %d\n', hmatrix_rank(A1));
 	A0=A1;
 	B0=B1;
 	C0=C1;	
+    
+    h2matrix_rank(A0)
 
 end 
 

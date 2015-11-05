@@ -11,13 +11,15 @@ ph2matrix create_tridiag_h2matrix (double * a, double * b, double * c, pccluster
 
   if (brc == NULL)
     {
-      brc = create_tridiag_clusterbasis (rc);
+      /* ref_clusterbasis (&brc, create_tridiag_clusterbasis (rc));      */
+      brc = create_tridiag_clusterbasis(rc);
       update_tree_clusterbasis (brc);
     }
 
   if (bcc == NULL)
     {
-      bcc = create_tridiag_clusterbasis (cc);
+      /* ref_clusterbasis (&bcc, create_tridiag_clusterbasis (cc));*/
+      bcc = create_tridiag_clusterbasis(cc);
       update_tree_clusterbasis (bcc);
     }
 
@@ -79,7 +81,7 @@ pclusterbasis create_tridiag_clusterbasis(pccluster rc)
 
   if (rc->sons == 0)
     {
-      clust = new_clusterbasis(rc);
+      ref_clusterbasis(&clust, new_clusterbasis(rc));
       clust->k = 2;
       init_zero_amatrix (&clust->V, rc->size, 2);
       clust->V.a[0] = 1;
@@ -87,7 +89,7 @@ pclusterbasis create_tridiag_clusterbasis(pccluster rc)
     }
   else
     {
-      clust=new_clusterbasis(rc);
+      ref_clusterbasis(&clust, new_clusterbasis(rc));
 
       clust->son[0] = create_tridiag_clusterbasis (rc->son[0]);
       init_zero_amatrix (&clust->son[0]->E, 2, 2);

@@ -6,7 +6,7 @@ function M = mldivide(H, A)
           M = [ M, HMatrix('pointer', l(i), H.row_cluster, A.col_cluster) ];
         end
     else
-        % TODO: Implement this as a linear system solver. 
-        M = full(H) \ A;
+	% Efficient H Matrix linear system solver. 
+	M = hmatrix_mldivide_full(H, A);
     end
 end

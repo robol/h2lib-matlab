@@ -12,6 +12,7 @@ MEX_FILES = \
     hmatrix_minus$(MEX_EXT)	        \
     hmatrix_uminus$(MEX_EXT)	       \
     hmatrix_mldivide$(MEX_EXT)          \
+    hmatrix_mldivide_full$(MEX_EXT)    \
     band$(MEX_EXT)                      \
     generators$(MEX_EXT)
 

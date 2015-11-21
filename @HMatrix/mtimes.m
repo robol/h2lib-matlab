@@ -4,11 +4,12 @@ function c = mtimes(H, b)
     Cptr = hmatrix_prod (H, b);
     c = HMatrix('pointer', Cptr, H.row_cluster, b.col_cluster);
   else
-    sz = size(b);
-
+    
+    sz = size(b,2);
+    c=zeros(size(b,1),sz);
     % TODO: Handle more columns as well
-    if (sz(2) == 1)
-      c = mvm_hmatrix_avector(H, b);
+    for j=1:sz
+      c(:,j) = mvm_hmatrix_avector(H, b(:,j));
     end
   end	   
 end

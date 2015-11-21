@@ -22,11 +22,14 @@ void mexFunction(int nlhs, mxArray *plhs[],
 
      /* Prepare the output with the same shape of the input */
      plhs[0] = mxCreateDoubleMatrix (m, n, mxREAL);
-     
+
      /* Copy the input into the output, since it will be overwritten. */
      memcpy (mxGetPr(plhs[0]), mxGetPr(prhs[1]), n * m * sizeof (double));
-     
-     init_amatrix (&am, m, n);
+
+     am.rows = m;
+     am.cols = n;
+     am.ld   = m;
+     am.owner = NULL;
      am.a = mxGetPr(plhs[0]);
 
      triangularinvmul_hmatrix_amatrix (true, true, false, Alr, false, &am);

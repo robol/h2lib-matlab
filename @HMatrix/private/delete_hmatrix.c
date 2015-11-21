@@ -6,5 +6,6 @@ void mexFunction (int nlhs, mxArray* plhs[],
 		  int nrhs, const mxArray* prhs[])
 {
   phmatrix H = DESERIALIZE_POINTER (mxGetProperty (prhs[0], 0, "hmatrix"));
-  del_hmatrix (H);
+
+  del_hmatrix(H);
 }

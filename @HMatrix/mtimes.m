@@ -1,4 +1,23 @@
 function c = mtimes(H, b)
+
+  if isfloat(H) && isscalar(H)
+      n = matrix_size(b);
+      n = n(1);
+      D = HMatrix('tridiagonal', b.row_cluster, b.col_cluster, ...
+                  H * ones(n, 1), zeros(n-1,1), zeros(n-1,1));
+      c = mtimes(D, b);
+      return;
+  end
+  
+  if isfloat(b) && isscalar(b)
+      n = matrix_size(H);
+      n = n(1);
+      D = HMatrix('tridiagonal', H.row_cluster, H.col_cluster, ...
+                  b * ones(n, 1), zeros(n-1,1), zeros(n-1,1));
+      c = mtimes(D, H);
+      return;
+  end
+
   if (isa(b, 'HMatrix'))
     % TODO: We need to check that dimensions and clusters match. 
     Cptr = hmatrix_prod (H, b);

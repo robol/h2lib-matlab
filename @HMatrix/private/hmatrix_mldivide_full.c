@@ -29,7 +29,9 @@ void mexFunction(int nlhs, mxArray *plhs[],
      am.rows = m;
      am.cols = n;
      am.ld   = m;
-     am.owner = NULL;
+     am.owner = NULL;     
+     
+     /* FIXME: This does not work, need to handle real/imaginary part correctly... */
      am.a = mxGetPr(plhs[0]);
 
      triangularinvmul_hmatrix_amatrix (true, true, false, Alr, false, &am);

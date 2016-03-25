@@ -33,8 +33,19 @@ pcluster std_subdivision_scheme_cluster (int * a, int n, int k);
  * @param b The subdiagonal entries of the matrix.
  * @param c The superdiagonal entries of the matrix.
  */
-phmatrix create_tridiag_hmatrix (double * a, double * b, double * c,
-				 pccluster rc, pccluster cc);
+phmatrix create_real_tridiag_hmatrix (double * a, double * b, double * c,
+				 	        	      pccluster rc, pccluster cc);	
+
+/**
+ * @brief Create a hierarichal matrix representing a tridiagonal
+ * matrix.
+ *
+ * @param a The diagonal entries of the matrix.
+ * @param b The subdiagonal entries of the matrix.
+ * @param c The superdiagonal entries of the matrix.
+ */
+phmatrix create_tridiag_hmatrix (field * a, field * b, field * c,
+				 				 pccluster rc, pccluster cc);				 				 
 
 /**
  * @brief Create a hierarichal matrix representing a (p,q)-band matrix

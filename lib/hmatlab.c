@@ -1,6 +1,5 @@
 #include "hmatlab.h"
-
-extern double ddot(long * n, double *, long *, double *, long *);
+#include <complex.h>
 
 #define MATRIX_ELEM(A,i,j,n) A[(j)*(n)+(i)]
 
@@ -23,8 +22,39 @@ pcluster std_subdivision_scheme_cluster(int *a, int n, int k)
   return clust;
 }
 
-phmatrix create_tridiag_hmatrix (double * a, double * b, double * c, 
-			         pccluster rc, pccluster cc)
+/**
+ * @brief Create a hierarichal matrix representing a tridiagonal
+ * matrix.
+ *
+ * @param a The diagonal entries of the matrix.
+ * @param b The subdiagonal entries of the matrix.
+ * @param c The superdiagonal entries of the matrix.
+ */
+phmatrix create_real_tridiag_hmatrix (double * a, double * b, double * c,
+				 	        	      pccluster rc, pccluster cc)
+{
+  field *a_a = malloc (rc->size * sizeof (field));
+  field *b_b = malloc (rc->size * sizeof (field)); 
+  field *c_c = malloc (rc->size * sizeof (field));
+  int i;
+  
+  for (i = 0; i < rc->size; i++) {
+    a_a[i] = a[i];
+    b_b[i] = b[i];
+    c_c[i] = c[i];
+  }
+  
+ phmatrix T = create_tridiag_hmatrix (a_a, b_b, c_c, rc, cc);
+  
+ free (a_a);
+ free (b_b);
+ free (c_c);
+ 
+ return T;
+}
+
+phmatrix create_tridiag_hmatrix (field * a, field * b, field * c, 
+			         			 pccluster rc, pccluster cc)
 {
   int n = rc->size;
   phmatrix A = NULL;
@@ -37,15 +67,15 @@ phmatrix create_tridiag_hmatrix (double * a, double * b, double * c,
 
       A = new_full_hmatrix (rc, cc);
 
-      memset (A->f->a, 0, sizeof (double) * n * n);
+      memset (A->f->a, 0, sizeof (field) * n * n);
 
-      A->f->a[0] = a[0];
+      A->f->a[0] = a[0];      
       for (i = 0; i < n - 1; i++)
-	{
-	  MATRIX_ELEM(A->f->a, i+1, i, n) = b[i];
-	  MATRIX_ELEM(A->f->a, i + 1, i + 1, n) = a[i+1];
-	  MATRIX_ELEM(A->f->a, i, i + 1, n) = c[i];
-	}
+	    {
+	      MATRIX_ELEM(A->f->a, i+1, i, n) = b[i];
+	      MATRIX_ELEM(A->f->a, i + 1, i + 1, n) = a[i+1];
+	      MATRIX_ELEM(A->f->a, i, i + 1, n) = c[i];
+	    }
 
       update_hmatrix (A);
     }
@@ -63,10 +93,10 @@ phmatrix create_tridiag_hmatrix (double * a, double * b, double * c,
       phmatrix A12 = new_rk_hmatrix (rc->son[0], cc->son[1], 1);
       phmatrix A21 = new_rk_hmatrix (rc->son[1], cc->son[0], 1);
 
-      memset (A12->r->A.a, 0, sizeof (double) * rc->son[0]->size);
-      memset (A12->r->B.a, 0, sizeof (double) * cc->son[1]->size);
-      memset (A21->r->A.a, 0, sizeof (double) * rc->son[1]->size);
-      memset (A21->r->B.a, 0, sizeof (double) * cc->son[0]->size);
+      memset (A12->r->A.a, 0, sizeof (field) * rc->son[0]->size);
+      memset (A12->r->B.a, 0, sizeof (field) * cc->son[1]->size);
+      memset (A21->r->A.a, 0, sizeof (field) * rc->son[1]->size);
+      memset (A21->r->B.a, 0, sizeof (field) * cc->son[0]->size);
 
       /* Fill in the low rank parts */
       A12->r->A.a[rc->son[0]->size - 1] = c[cc->son[0]->size - 1];
@@ -137,10 +167,10 @@ phmatrix create_band_hmatrix (double * a, double * b, double * c, int p, int q,
       phmatrix A12 = new_rk_hmatrix (rc->son[0], cc->son[1], q);
       phmatrix A21 = new_rk_hmatrix (rc->son[1], cc->son[0], p);
 
-      memset (A12->r->A.a, 0, sizeof (double) * rc->son[0]->size *q);
-      memset (A12->r->B.a, 0, sizeof (double) * cc->son[1]->size *q);
-      memset (A21->r->A.a, 0, sizeof (double) * rc->son[1]->size *p);
-      memset (A21->r->B.a, 0, sizeof (double) * cc->son[0]->size *p);
+      memset (A12->r->A.a, 0, sizeof (field) * rc->son[0]->size *q);
+      memset (A12->r->B.a, 0, sizeof (field) * cc->son[1]->size *q);
+      memset (A21->r->A.a, 0, sizeof (field) * rc->son[1]->size *p);
+      memset (A21->r->B.a, 0, sizeof (field) * cc->son[0]->size *p);
 
       /* Fill in the low rank parts */
       for (i=0; i<q; i++)
@@ -183,7 +213,7 @@ phmatrix create_generators_hmatrix (double * d, double * U, double * V,  double 
     {
       A = new_full_hmatrix (rc, cc);
 
-      memset (A->f->a, 0, sizeof (double) * n * n);
+      memset (A->f->a, 0, sizeof (field) * n * n);
 
       for (i = 0; i < n; i++)
 	{
@@ -221,10 +251,10 @@ phmatrix create_generators_hmatrix (double * d, double * U, double * V,  double 
 
       phmatrix A12 = new_rk_hmatrix (rc->son[0], cc->son[1], ksup);
       phmatrix A21 = new_rk_hmatrix (rc->son[1], cc->son[0], ksub);
-      memset (A12->r->A.a, 0, sizeof (double) * rc->son[0]->size * ksup);
-      memset (A12->r->B.a, 0, sizeof (double) * cc->son[1]->size * ksup);
-      memset (A21->r->A.a, 0, sizeof (double) * rc->son[1]->size * ksub);
-      memset (A21->r->B.a, 0, sizeof (double) * cc->son[0]->size * ksub);
+      memset (A12->r->A.a, 0, sizeof (field) * rc->son[0]->size * ksup);
+      memset (A12->r->B.a, 0, sizeof (field) * cc->son[1]->size * ksup);
+      memset (A21->r->A.a, 0, sizeof (field) * rc->son[1]->size * ksub);
+      memset (A21->r->B.a, 0, sizeof (field) * cc->son[0]->size * ksub);
 
       /* Fill in the low rank parts */
       for (i=0; i < rc->son[0]->size; i++)

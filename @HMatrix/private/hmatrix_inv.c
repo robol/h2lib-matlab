@@ -15,7 +15,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
   /* Allocate space for the inversion */
   double * a = malloc (sizeof(double) * A->rc->size);
   memset (a, 0, sizeof(double) * A->rc->size);
-  phmatrix B = create_tridiag_hmatrix(a,a,a,A->rc,A->cc);
+  phmatrix B = create_real_tridiag_hmatrix(a,a,a,A->rc,A->cc);
   free (a);
 
   ptruncmode  tm;

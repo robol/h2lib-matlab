@@ -16,7 +16,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
 
   phmatrix C = clone_hmatrix (A);
 
-  add_hmatrix(-1.0, B, tm, h2lib_eps, C);
+  add_hmatrix(- FIELD_ONE, B, tm, h2lib_eps, C);
 
   SERIALIZE_POINTER (plhs[0], C);
 }

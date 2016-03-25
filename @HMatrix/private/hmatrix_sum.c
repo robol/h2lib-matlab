@@ -1,3 +1,5 @@
+#define USE_COMPLEX 1
+
 #include "mex.h"
 #include <avector.h>
 #include <hmatrix.h>
@@ -14,8 +16,10 @@ void mexFunction(int nlhs, mxArray *plhs[],
   ptruncmode tm = new_releucl_truncmode();
 
   phmatrix C = clone_hmatrix (B);
+  real eps = h2lib_eps;
 
-  add_hmatrix(1.0, A, tm, h2lib_eps, C);
+  /* printf ("Passing eps = %e\n", h2lib_eps); */
+  add_hmatrix(FIELD_ONE, A, tm, eps, C);
 
   SERIALIZE_POINTER (plhs[0], C);
 }

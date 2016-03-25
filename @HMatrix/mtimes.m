@@ -1,20 +1,12 @@
 function c = mtimes(H, b)
 
   if isfloat(H) && isscalar(H)
-      n = matrix_size(b);
-      n = n(1);
-      D = HMatrix('tridiagonal', b.row_cluster, b.col_cluster, ...
-                  H * ones(n, 1), zeros(n-1,1), zeros(n-1,1));
-      c = mtimes(D, b);
+      c = HMatrix('pointer', hmatrix_scale (b, H), b.row_cluster, b.col_cluster);
       return;
   end
   
   if isfloat(b) && isscalar(b)
-      n = matrix_size(H);
-      n = n(1);
-      D = HMatrix('tridiagonal', H.row_cluster, H.col_cluster, ...
-                  b * ones(n, 1), zeros(n-1,1), zeros(n-1,1));
-      c = mtimes(D, H);
+      c = HMatrix('pointer', hmatrix_scale (H, b), H.row_cluster, H.col_cluster);
       return;
   end
 

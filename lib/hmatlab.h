@@ -11,6 +11,12 @@
 
 #define h2lib_eps (getenv("H2LIB_EPS") == NULL ? 1.0e-13 : strtod(getenv("H2LIB_EPS"), NULL))
 
+#ifdef USE_COMPLEX
+#define FIELD_ONE (1.0 + 0.0 * I)
+#else
+#define FIELD_ONE 1.0
+#endif
+
 /**
  * @brief Create an index cluster representing the standard subdivision
  * scheme obtained by recursively subdividing the segment by bisection
@@ -120,6 +126,11 @@ ph2matrix create_tridiag_h2matrix (double * a, double * b, double * c, pccluster
  * @return The QS rank of H.
  */
 size_t h2matrix_get_rank (pch2matrix H);
+
+/** 
+ * @brief Scale a {@link hmatrix} by a scalar value. 
+ */
+void scale_hmatrix (field r, phmatrix H);
 
 /**
  * @brief Macro used to serialize pointers in classdef-objects properties

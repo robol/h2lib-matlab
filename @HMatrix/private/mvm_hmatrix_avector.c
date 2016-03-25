@@ -56,7 +56,8 @@ void mexFunction(int nlhs, mxArray *plhs[],
   double * yr = mxGetPr(plhs[0]);
   double * yi = mxGetPi(plhs[0]);
   
-  memset (yi, 0, sizeof (double) * n);
+  if (yi)
+      memset (yi, 0, sizeof (double) * n);
   
   for (i = 0; i < n; i++) {
 #ifdef USE_COMPLEX

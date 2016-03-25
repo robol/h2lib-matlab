@@ -314,3 +314,39 @@ size_t hmatrix_get_n (pchmatrix H)
 {
   return H->cc->size;
 }
+
+void scale_hmatrix (field r, phmatrix H)
+{
+  if (H->f) {
+    scale_amatrix (r, H->f);
+  }
+  
+  if (H->r) {
+    scale_amatrix (r, &H->r->A);
+  }
+  
+  if (H->son) {
+    int i, j;
+    
+    for (i = 0; i < H->rsons * H->csons; i++)
+      scale_hmatrix (r, H->son[i]);
+  }
+}
+
+void shift_hmatrix (field r, phmatrix H)
+{
+  if (H->f) {
+    int i;
+  }
+  
+  if (H->r) {
+    scale_amatrix (r, &H->r->A);
+  }
+  
+  if (H->son) {
+    int i, j;
+    
+    for (i = 0; i < H->rsons * H->csons; i++)
+      scale_hmatrix (r, H->son[i]);
+  }
+}

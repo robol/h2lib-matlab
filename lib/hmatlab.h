@@ -131,6 +131,10 @@ size_t h2matrix_get_rank (pch2matrix H);
  * @brief Scale a {@link hmatrix} by a scalar value. 
  */
 void scale_hmatrix (field r, phmatrix H);
+/**
+ * @brief Compute the shifted hmatrix H + rI. 
+ */
+void shift_hmatrix (field r, phmatrix H);
 
 /**
  * @brief Macro used to serialize pointers in classdef-objects properties

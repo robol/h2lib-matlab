@@ -337,16 +337,15 @@ void shift_hmatrix (field r, phmatrix H)
 {
   if (H->f) {
     int i;
-  }
-  
-  if (H->r) {
-    scale_amatrix (r, &H->r->A);
+    
+    for (i = 0; i < H->rc->size; i++)
+      setentry_amatrix (H->f, i, i, getentry_amatrix (H->f, i, i) + r);
   }
   
   if (H->son) {
-    int i, j;
+    int i;
     
     for (i = 0; i < H->rsons * H->csons; i++)
-      scale_hmatrix (r, H->son[i]);
+      shift_hmatrix (r, H->son[i]);
   }
 }

@@ -11,10 +11,11 @@ MEX_FILES = \
     delete_hmatrix$(MEX_EXT) 		\
     hmatrix_minus$(MEX_EXT)	        \
     hmatrix_uminus$(MEX_EXT)	       \
-    hmatrix_mldivide$(MEX_EXT)          \
+    hmatrix_mldivide$(MEX_EXT)         \
     hmatrix_mldivide_full$(MEX_EXT)    \
     hmatrix_scale$(MEX_EXT)            \
-    band$(MEX_EXT)                      \
+    hmatrix_shift$(MEX_EXT)            \
+    band$(MEX_EXT)                     \
     generators$(MEX_EXT)
 
 all: $(MEX_FILES)

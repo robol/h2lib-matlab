@@ -3,6 +3,7 @@
 MEX_FILES = \
     matrix_size$(MEX_EXT) \
     hmatrix_rank$(MEX_EXT) \
+    hmatrix_trace$(MEX_EXT) \
     norm$(MEX_EXT)
 
 all: $(MEX_FILES) _private

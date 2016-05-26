@@ -296,6 +296,16 @@ phmatrix create_generators_hmatrix (double * d, double * U, double * V,  double 
   return A;
 }
 
+field hmatrix_trace(pchmatrix H)
+{
+if (H->f){
+	return trace_amatrix(H->f);
+	}
+if(H->son){
+	return hmatrix_trace(H->son[0])+hmatrix_trace(H->son[3]);
+	}
+}
+
 
 size_t hmatrix_get_rank (pchmatrix H)
 {

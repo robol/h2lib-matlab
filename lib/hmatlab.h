@@ -79,6 +79,19 @@ phmatrix create_generators_hmatrix (double * d, double * U, double * V, double *
 			         int ksub, int ksup, pccluster rc, pccluster cc);
 
 /**
+ * @brief Obtain the trace of the hierarchical matrix H. 
+ * 
+ * Currently this routine is implemented only for 2x2 recursive block partitioning. 
+ *
+ * A good implementation should consider more general cluster tree.
+ *  
+ * 
+ * @param H The hmatrix whose trace should be obtained. 
+ * @return The trace of H.
+ */
+field hmatrix_trace (pchmatrix H);
+
+/**
  * @brief Obtain the quasiseparable rank of the hierarchical matrix H. 
  * 
  * Currently this routine is implemented in a suboptimal way so that it

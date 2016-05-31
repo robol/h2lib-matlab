@@ -346,6 +346,19 @@ if(H->son){
 	}
 }
 
+field
+trace_amatrix(pamatrix a)
+{
+  LAPACK_INT      rows = a->rows;
+  LAPACK_INT lda = a->ld;
+  field trace = 0.0;  
+  uint      j;
+
+  for (j = 0; j < rows; j++) {
+    trace+=a->a[j + j * lda];
+  }
+return trace;
+}
 
 size_t hmatrix_get_rank (pchmatrix H)
 {

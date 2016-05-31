@@ -24,6 +24,11 @@ classdef HMatrix < handle
             else
                 kind = varargin{1};
                 
+                if (~ischar(kind))
+                    obj = hmatrix_from_full(varargin{:});
+                    return
+                end
+                
                 switch (kind)
                     case 'tridiagonal'
                         if (length(varargin) < 6)

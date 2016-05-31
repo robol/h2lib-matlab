@@ -53,6 +53,46 @@ phmatrix create_real_tridiag_hmatrix (double * a, double * b, double * c,
  return T;
 }
 
+phmatrix create_hmatrix_from_full (field * a, pccluster rc, pccluster cc, int lda)
+{
+  phmatrix A = NULL; 
+  int n = rc->size, i, j; 
+
+  /* Check if we are in the base case */
+  if (rc->son == NULL && cc->son == NULL) {
+    A = new_full_hmatrix (rc, cc);
+
+    /* Copy the content inside the full matrix */
+    for (i = 0; i < rc->size; i++)
+      for (j = 0; j < cc->size; j++)
+	MATRIX_ELEM(A->f->a, i, j, n) = MATRIX_ELEM(a, rc->idx[i], cc->idx[j], lda); 
+  }
+  else {
+    A = new_super_hmatrix (rc, cc, 2, 2);
+        
+    phmatrix A11 = create_hmatrix_from_full (a, rc->son[0], cc->son[0], lda);
+    phmatrix A22 = create_hmatrix_from_full (a, rc->son[1], cc->son[1], lda);
+
+    phmatrix A12 = new_rk_hmatrix (rc->son[0], cc->son[1], 1);
+    phmatrix A21 = new_rk_hmatrix (rc->son[1], cc->son[0], 1);
+
+    memset (A12->r->A.a, 0, sizeof (field) * rc->son[0]->size);
+    memset (A12->r->B.a, 0, sizeof (field) * cc->son[1]->size);
+    memset (A21->r->A.a, 0, sizeof (field) * rc->son[1]->size);
+    memset (A21->r->B.a, 0, sizeof (field) * cc->son[0]->size);
+
+    ref_hmatrix(&A->son[0], A11);
+    ref_hmatrix(&A->son[1], A21);
+    ref_hmatrix(&A->son[2], A12);
+    ref_hmatrix(&A->son[3], A22);
+    
+    update_hmatrix (A);
+  }
+
+  return A; 
+}
+
+
 phmatrix create_tridiag_hmatrix (field * a, field * b, field * c, 
 			         			 pccluster rc, pccluster cc)
 {

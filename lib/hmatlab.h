@@ -41,7 +41,15 @@ pcluster std_subdivision_scheme_cluster (int * a, int n, int k);
  * @param c The superdiagonal entries of the matrix.
  */
 phmatrix create_real_tridiag_hmatrix (double * a, double * b, double * c,
-				 	        	      pccluster rc, pccluster cc);	
+				      pccluster rc, pccluster cc);
+
+/**
+ * @brief Create a hierarchical matrix starting from its dense 
+ * representation. 
+ *
+ * @param a The matrix to represent.
+ */
+phmatrix create_hmatrix_from_full (double * a, pccluster rc, pccluster cc, int lda);
 
 /**
  * @brief Create a hierarichal matrix representing a tridiagonal

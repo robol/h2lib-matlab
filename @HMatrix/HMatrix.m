@@ -25,8 +25,10 @@ classdef HMatrix < handle
                 kind = varargin{1};
                 
                 if (~ischar(kind))
-                    obj = hmatrix_from_full(varargin{:});
-                    return
+		  obj.row_cluster = varargin{2};
+		  obj.col_cluster = varargin{3};
+                  hmatrix_from_full(obj, varargin{:});
+                  return
                 end
                 
                 switch (kind)
@@ -69,7 +71,7 @@ classdef HMatrix < handle
         end
         
         function disp(obj)
-            sz = matrix_size(obj);
+          sz = matrix_size(obj);
             fprintf('    HMatrix of size %d x %d, rank %d\n\n', ...
                 sz(1), sz(2), hmatrix_rank (obj));
             disp(full(obj));

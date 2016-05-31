@@ -1,5 +1,6 @@
 #include "hmatlab.h"
 #include <complex.h>
+#include <string.h>
 
 #define MATRIX_ELEM(A,i,j,n) A[(j)*(n)+(i)]
 
@@ -53,6 +54,45 @@ phmatrix create_real_tridiag_hmatrix (double * a, double * b, double * c,
  return T;
 }
 
+phmatrix
+constructCompressedRkMatrix(field * X, pccluster rc, pccluster cc, double eps)
+{
+  int rank = 0, i, j; 
+  long m = rc->size;
+  long n = cc->size; 
+  phmatrix H = NULL;
+  long info = 0, lwork = 25 * n;
+  field * work = malloc (sizeof (double) * 25 * n);
+  field * U = malloc (sizeof (double) * m * m);
+  field * Vt = malloc (sizeof (double) * n * n);
+
+  double * singular_values = malloc (sizeof (double) * m);
+
+  dgesvd_("N", "N", &m, &n, X, &m, singular_values, 
+	  U, &m, Vt, &n, work, &lwork, &info);
+
+  /* Find out the rank */
+  while (singular_values[++rank] > eps && rank <= n);
+
+  /* Construct the matrix */
+  H = new_rk_hmatrix (rc, cc, rank); 
+
+  /* Fill in the basis */
+  memcpy (H->r->A.a, U,  sizeof(field) * rank * m);
+  memcpy (H->r->B.a, Vt, sizeof(field) * rank * n);
+
+  /* Multiply the columns of U by the singular values */
+  for (i = 0; i < rank; i++)
+    for (j = 0; j < m; j++)
+      MATRIX_ELEM(H->r->A.a, j, i, m) = singular_values[i] * MATRIX_ELEM(H->r->A.a, j, i, m);
+
+  free(U);
+  free(Vt);
+  free(singular_values);
+
+  return H;
+}
+
 phmatrix create_hmatrix_from_full (field * a, pccluster rc, pccluster cc, int lda)
 {
   phmatrix A = NULL; 
@@ -73,13 +113,20 @@ phmatrix create_hmatrix_from_full (field * a, pccluster rc, pccluster cc, int ld
     phmatrix A11 = create_hmatrix_from_full (a, rc->son[0], cc->son[0], lda);
     phmatrix A22 = create_hmatrix_from_full (a, rc->son[1], cc->son[1], lda);
 
-    phmatrix A12 = new_rk_hmatrix (rc->son[0], cc->son[1], 1);
-    phmatrix A21 = new_rk_hmatrix (rc->son[1], cc->son[0], 1);
+    /* We need to determine the rank of the offdiagonal blocks. */
+    field * X = malloc (sizeof (field) * rc->son[1]->size * cc->son[0]->size);
+    for (i = 0; i < rc->son[1]->size; i++)
+      for (j = 0; j < cc->son[0]->size; j++)
+	MATRIX_ELEM(X, i, j, n) = MATRIX_ELEM(a, rc->son[1]->idx[i], cc->son[0]->idx[j], lda); 
+    /* Determine the rank of the matrix */
+    phmatrix A21 = constructCompressedRkMatrix(X, rc->son[1], cc->son[0], h2lib_eps);
 
-    memset (A12->r->A.a, 0, sizeof (field) * rc->son[0]->size);
-    memset (A12->r->B.a, 0, sizeof (field) * cc->son[1]->size);
-    memset (A21->r->A.a, 0, sizeof (field) * rc->son[1]->size);
-    memset (A21->r->B.a, 0, sizeof (field) * cc->son[0]->size);
+    X = realloc (X, sizeof (field) * rc->son[0]->size * cc->son[1]->size);
+    for (i = 0; i < rc->son[0]->size; i++)
+      for (j = 0; j < cc->son[1]->size; j++)
+	MATRIX_ELEM(X, i, j, n) = MATRIX_ELEM(a, rc->son[0]->idx[i], cc->son[1]->idx[j], lda);  
+    phmatrix A12 = constructCompressedRkMatrix(X, rc->son[0], cc->son[1], h2lib_eps);
+    free (X);
 
     ref_hmatrix(&A->son[0], A11);
     ref_hmatrix(&A->son[1], A21);

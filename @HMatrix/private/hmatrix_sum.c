@@ -3,6 +3,7 @@
 #include "mex.h"
 #include <avector.h>
 #include <hmatrix.h>
+#include <hmatrix.h>
 #include <cluster.h>
 #include <string.h>
 #include <truncation.h>

@@ -104,8 +104,8 @@ field hmatrix_trace (pchmatrix H);
  *
  *  @param a The hmatrix whose trace should be obtained.
  *  @return The trace of a
-HEADER_PREFIX field
-trace_amatrix(pamatrix a);
+ */
+field trace_amatrix(pamatrix a);
 
 /**
  * @brief Obtain the quasiseparable rank of the hierarchical matrix H. 

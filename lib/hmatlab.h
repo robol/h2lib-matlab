@@ -12,6 +12,7 @@
 #define h2lib_eps (getenv("H2LIB_EPS") == NULL ? 1.0e-13 : strtod(getenv("H2LIB_EPS"), NULL))
 
 #ifdef USE_COMPLEX
+#include <complex.h>
 #define FIELD_ONE (1.0 + 0.0 * I)
 #else
 #define FIELD_ONE 1.0

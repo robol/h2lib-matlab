@@ -16,12 +16,13 @@ MEX_FILES = \
     hmatrix_scale$(MEX_EXT)            \
     hmatrix_shift$(MEX_EXT)            \
     band$(MEX_EXT)                     \
-    generators$(MEX_EXT)
+    generators$(MEX_EXT) \
+    hmatrix_from_full$(MEX_EXT)
 
 all: $(MEX_FILES)
 
 %$(MEX_EXT): %.c
-	$(MEX) -o $@ $(CFLAGS) $(MATLAB_CFLAGS) $< $(LDFLAGS) $(LIBS) $(MEX_LIBS) > /dev/null
+	$(MEX) $< CFLAGS="$(CFLAGS) $(MATLAB_CFLAGS)" LDFLAGS="$(LDFLAGS) $(LIBS) $(MEX_LIBS)" > /dev/null
 
 clean:
 	rm -f *$(MEX_EXT)

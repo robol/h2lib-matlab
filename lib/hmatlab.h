@@ -91,6 +91,13 @@ phmatrix create_generators_hmatrix (double * d, double * U, double * V, double *
  */
 field hmatrix_trace (pchmatrix H);
 
+/** @brief Obtain the trace of the full matrix a.
+ *
+ *  @param a The hmatrix whose trace should be obtained.
+ *  @return The trace of a
+HEADER_PREFIX field
+trace_amatrix(pamatrix a);
+
 /**
  * @brief Obtain the quasiseparable rank of the hierarchical matrix H. 
  * 

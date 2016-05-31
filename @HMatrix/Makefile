@@ -12,7 +12,7 @@ _private:
 	$(MAKE) -C private
 
 %$(MEX_EXT): %.c
-	$(MEX) $<  $(LIBS) $(MEX_LIBS) CFLAGS="$(CFLAGS) $(MATLAB_CFLAGS)" LDFLAGS="$(LDFLAGS)" > /dev/null
+	$(MEX)  $<  $(LIBS) $(MEX_LIBS) CFLAGS="$(CFLAGS) $(MATLAB_CFLAGS)" LDFLAGS="$(LDFLAGS)" > /dev/null
 
 clean:
 	rm -f *$(MEX_EXT)

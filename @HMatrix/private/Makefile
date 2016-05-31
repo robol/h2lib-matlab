@@ -22,7 +22,7 @@ MEX_FILES = \
 all: $(MEX_FILES)
 
 %$(MEX_EXT): %.c
-	$(MEX) $< $(LIBS) $(MEX_LIBS) CFLAGS="$(CFLAGS) $(MATLAB_CFLAGS)" LDFLAGS="$(LDFLAGS)" > /dev/null
+	$(MEX) $< $(LIBS) $(MEX_LIBS) CFLAGS="$(CFLAGS) $(MATLAB_CFLAGS)" LDFLAGS="$(LDFLAGS)" 
 
 clean:
 	rm -f *$(MEX_EXT)

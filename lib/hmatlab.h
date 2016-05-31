@@ -49,7 +49,7 @@ phmatrix create_real_tridiag_hmatrix (double * a, double * b, double * c,
  *
  * @param a The matrix to represent.
  */
-phmatrix create_hmatrix_from_full (double * a, pccluster rc, pccluster cc, int lda);
+phmatrix create_hmatrix_from_full (field * a, pccluster rc, pccluster cc, int lda);
 
 /**
  * @brief Create a hierarichal matrix representing a tridiagonal

@@ -84,7 +84,7 @@ echo "MEX=$MEX" >> Makefile.inc
 echo "MEX_EXT=$MEX_EXT" >> Makefile.inc
 echo "CFLAGS= -fPIC -g -I\$(BASE_DIR)/H2Lib/Library -I\$(BASE_DIR)/lib" >> Makefile.inc
 echo "MATLAB_CFLAGS= -D__MATLAB_TRICK" >> Makefile.inc
-echo "LDFLAGS= -L\$(BASE_DIR)/lib -L\$(BASE_DIR)/H2Lib -Wl,-R\$(BASE_DIR)/H2Lib -Wl,-R\$(BASE_DIR)/lib" >> Makefile.inc
+echo "LDFLAGS= -L\$(BASE_DIR)/lib -L\$(BASE_DIR)/H2Lib -Wl,-R\$(BASE_DIR)/H2Lib -Wl,-R\$(BASE_DIR)/lib -shared" >> Makefile.inc 
 echo "LIBS= -lh2" >> Makefile.inc
 echo "MEX_LIBS= -lhmatlab" >> Makefile.inc
 

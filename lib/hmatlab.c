@@ -91,7 +91,7 @@ constructCompressedRkMatrix(field * X, pccluster rc, pccluster cc, double eps)
   memcpy (H->r->A.a, U,  sizeof(field) * rank * m);
   for (i = 0; i < rank; i++)
     for (j = 0; j < n; j++)
-      MATRIX_ELEM(H->r->B.a, j, i, n) = MATRIX_ELEM(Vt, i, j, rank) * singular_values[i]; 
+      MATRIX_ELEM(H->r->B.a, j, i, n) = MATRIX_ELEM(Vt, i, j, n) * singular_values[i]; 
 
   free(U);
   free(Vt);
@@ -124,7 +124,7 @@ phmatrix create_hmatrix_from_full (field * a, pccluster rc, pccluster cc, int ld
     field * X = malloc (sizeof(field) * rc->son[1]->size * cc->son[0]->size);
     for (i = 0; i < rc->son[1]->size; i++)
       for (j = 0; j < cc->son[0]->size; j++)
-	MATRIX_ELEM(X, i, j, cc->son[0]->size) = MATRIX_ELEM(a, rc->son[1]->idx[i], cc->son[0]->idx[j], lda); 
+      MATRIX_ELEM(X, i, j, rc->son[1]->size) = MATRIX_ELEM(a, rc->son[1]->idx[i], cc->son[0]->idx[j], lda);
 
     /* Determine the rank of the matrix */
     phmatrix A21 = constructCompressedRkMatrix(X, rc->son[1], cc->son[0], h2lib_eps);
@@ -132,12 +132,14 @@ phmatrix create_hmatrix_from_full (field * a, pccluster rc, pccluster cc, int ld
     /* Try to rellocate X if possible */
     field * newX = realloc(X, sizeof(field) * rc->son[0]->size * cc->son[1]->size);
     if (newX != NULL)
-      X = newX; 
+    X = newX;
 
-    for (i = 0; i < rc->son[0]->size; i++)
-      for (j = 0; j < cc->son[1]->size; j++)
-	MATRIX_ELEM(X, i, j, cc->son[1]->size) = MATRIX_ELEM(a, rc->son[0]->idx[i], cc->son[1]->idx[j], lda);  
-    phmatrix A12 = constructCompressedRkMatrix(X, rc->son[0], cc->son[1], h2lib_eps);
+    for (i = 0; i < rc->son[0]->size; i++) {
+      for (j = 0; j < cc->son[1]->size; j++) {
+	MATRIX_ELEM(X, i, j, rc->son[0]->size) = MATRIX_ELEM(a, rc->son[0]->idx[i], cc->son[1]->idx[j], lda);
+      }
+    }
+    phmatrix A12 = constructCompressedRkMatrix(X, rc->son[0], cc->son[1], h2lib_eps);    
     free(X);
 
     ref_hmatrix(&A->son[0], A11);

@@ -54,37 +54,44 @@ phmatrix create_real_tridiag_hmatrix (double * a, double * b, double * c,
  return T;
 }
 
+extern void
+dgesvd_ (const char *, const char *, LAPACK_INT*, LAPACK_INT*, 
+	 field *, LAPACK_INT*, double *, field *, LAPACK_INT*, 
+	 field *, LAPACK_INT*, field*, LAPACK_INT*, LAPACK_INT*);
+
 phmatrix
 constructCompressedRkMatrix(field * X, pccluster rc, pccluster cc, double eps)
 {
   int rank = 0, i, j; 
-  long m = rc->size;
-  long n = cc->size; 
+  LAPACK_INT m = rc->size;
+  LAPACK_INT n = cc->size; 
+  LAPACK_INT mn = (m < n) ? m : n;
+  LAPACK_INT MN = (m > n) ? m : n;
   phmatrix H = NULL;
-  long info = 0, lwork = 25 * n;
-  field * work = malloc (sizeof (double) * 25 * n);
-  field * U = malloc (sizeof (double) * m * m);
-  field * Vt = malloc (sizeof (double) * n * n);
+  LAPACK_INT info = 0, lwork = 10 * MN;
+  field * work = malloc (sizeof (field) * lwork);
+  field * U = malloc (sizeof (field) * m * m);
+  field * Vt = malloc (sizeof (field) * n * n);
 
   double * singular_values = malloc (sizeof (double) * m);
 
-  dgesvd_("N", "N", &m, &n, X, &m, singular_values, 
+  /* Make a workspace query */
+  dgesvd_("S", "S", &m, &n, X, &m, singular_values, 
 	  U, &m, Vt, &n, work, &lwork, &info);
 
   /* Find out the rank */
-  while (singular_values[++rank] > eps && rank <= n);
+  while (singular_values[rank] > eps && rank < mn) { 
+    rank++;
+  }
 
   /* Construct the matrix */
   H = new_rk_hmatrix (rc, cc, rank); 
 
   /* Fill in the basis */
   memcpy (H->r->A.a, U,  sizeof(field) * rank * m);
-  memcpy (H->r->B.a, Vt, sizeof(field) * rank * n);
-
-  /* Multiply the columns of U by the singular values */
   for (i = 0; i < rank; i++)
-    for (j = 0; j < m; j++)
-      MATRIX_ELEM(H->r->A.a, j, i, m) = singular_values[i] * MATRIX_ELEM(H->r->A.a, j, i, m);
+    for (j = 0; j < n; j++)
+      MATRIX_ELEM(H->r->B.a, j, i, n) = MATRIX_ELEM(Vt, i, j, rank) * singular_values[i]; 
 
   free(U);
   free(Vt);
@@ -114,19 +121,24 @@ phmatrix create_hmatrix_from_full (field * a, pccluster rc, pccluster cc, int ld
     phmatrix A22 = create_hmatrix_from_full (a, rc->son[1], cc->son[1], lda);
 
     /* We need to determine the rank of the offdiagonal blocks. */
-    field * X = malloc (sizeof (field) * rc->son[1]->size * cc->son[0]->size);
+    field * X = malloc (sizeof(field) * rc->son[1]->size * cc->son[0]->size);
     for (i = 0; i < rc->son[1]->size; i++)
       for (j = 0; j < cc->son[0]->size; j++)
-	MATRIX_ELEM(X, i, j, n) = MATRIX_ELEM(a, rc->son[1]->idx[i], cc->son[0]->idx[j], lda); 
+	MATRIX_ELEM(X, i, j, cc->son[0]->size) = MATRIX_ELEM(a, rc->son[1]->idx[i], cc->son[0]->idx[j], lda); 
+
     /* Determine the rank of the matrix */
     phmatrix A21 = constructCompressedRkMatrix(X, rc->son[1], cc->son[0], h2lib_eps);
 
-    X = realloc (X, sizeof (field) * rc->son[0]->size * cc->son[1]->size);
+    /* Try to rellocate X if possible */
+    field * newX = realloc(X, sizeof(field) * rc->son[0]->size * cc->son[1]->size);
+    if (newX != NULL)
+      X = newX; 
+
     for (i = 0; i < rc->son[0]->size; i++)
       for (j = 0; j < cc->son[1]->size; j++)
-	MATRIX_ELEM(X, i, j, n) = MATRIX_ELEM(a, rc->son[0]->idx[i], cc->son[1]->idx[j], lda);  
+	MATRIX_ELEM(X, i, j, cc->son[1]->size) = MATRIX_ELEM(a, rc->son[0]->idx[i], cc->son[1]->idx[j], lda);  
     phmatrix A12 = constructCompressedRkMatrix(X, rc->son[0], cc->son[1], h2lib_eps);
-    free (X);
+    free(X);
 
     ref_hmatrix(&A->son[0], A11);
     ref_hmatrix(&A->son[1], A21);

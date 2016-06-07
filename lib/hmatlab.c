@@ -124,7 +124,7 @@ phmatrix create_hmatrix_from_full (field * a, pccluster rc, pccluster cc, int ld
     field * X = malloc (sizeof(field) * rc->son[1]->size * cc->son[0]->size);
     for (i = 0; i < rc->son[1]->size; i++)
       for (j = 0; j < cc->son[0]->size; j++)
-	MATRIX_ELEM(X, i, j, cc->son[0]->size) = MATRIX_ELEM(a, rc->son[1]->idx[i], cc->son[0]->idx[j], lda); 
+      MATRIX_ELEM(X, i, j, rc->son[1]->size) = MATRIX_ELEM(a, rc->son[1]->idx[i], cc->son[0]->idx[j], lda);
 
     /* Determine the rank of the matrix */
     phmatrix A21 = constructCompressedRkMatrix(X, rc->son[1], cc->son[0], h2lib_eps);
@@ -132,11 +132,15 @@ phmatrix create_hmatrix_from_full (field * a, pccluster rc, pccluster cc, int ld
     /* Try to rellocate X if possible */
     field * newX = realloc(X, sizeof(field) * rc->son[0]->size * cc->son[1]->size);
     if (newX != NULL)
-      X = newX; 
+    X = newX;
 
-    for (i = 0; i < rc->son[0]->size; i++)
-      for (j = 0; j < cc->son[1]->size; j++)
-	MATRIX_ELEM(X, i, j, cc->son[1]->size) = MATRIX_ELEM(a, rc->son[0]->idx[i], cc->son[1]->idx[j], lda);  
+    for (i = 0; i < rc->son[0]->size; i++) {
+      for (j = 0; j < cc->son[1]->size; j++) {
+	MATRIX_ELEM(X, i, j, rc->son[0]->size) = MATRIX_ELEM(a, rc->son[0]->idx[i], cc->son[1]->idx[j], lda);
+	printf(" %e ", MATRIX_ELEM(X, i, j, rc->son[0]->size));
+      }
+      printf("\n");							
+    }
     phmatrix A12 = constructCompressedRkMatrix(X, rc->son[0], cc->son[1], h2lib_eps);
     free(X);
 

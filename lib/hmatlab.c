@@ -35,36 +35,43 @@ phmatrix create_real_tridiag_hmatrix (double * a, double * b, double * c,
 				 	        	      pccluster rc, pccluster cc)
 {
   field *a_a = malloc (rc->size * sizeof (field));
-  field *b_b = malloc (rc->size * sizeof (field)); 
+  field *b_b = malloc (rc->size * sizeof (field));
   field *c_c = malloc (rc->size * sizeof (field));
   int i;
-  
+
   for (i = 0; i < rc->size; i++) {
     a_a[i] = a[i];
     b_b[i] = b[i];
     c_c[i] = c[i];
   }
-  
+
  phmatrix T = create_tridiag_hmatrix (a_a, b_b, c_c, rc, cc);
-  
+
  free (a_a);
  free (b_b);
  free (c_c);
- 
+
  return T;
 }
 
+#ifndef USE_COMPLEX
 extern void
-dgesvd_ (const char *, const char *, LAPACK_INT*, LAPACK_INT*, 
-	 field *, LAPACK_INT*, double *, field *, LAPACK_INT*, 
+dgesvd_ (const char *, const char *, LAPACK_INT*, LAPACK_INT*,
+	 field *, LAPACK_INT*, double *, field *, LAPACK_INT*,
 	 field *, LAPACK_INT*, field*, LAPACK_INT*, LAPACK_INT*);
+#else
+extern void
+zgesvd_ (const char *, const char *, LAPACK_INT*, LAPACK_INT*,
+	 field*, LAPACK_INT*, double *, field *, LAPACK_INT*,
+	 field*, LAPACK_INT*, field*, LAPACK_INT*, double*, LAPACK_INT*);
+#endif
 
 phmatrix
 constructCompressedRkMatrix(field * X, pccluster rc, pccluster cc, double eps)
 {
-  int rank = 0, i, j; 
+  int rank = 0, i, j;
   LAPACK_INT m = rc->size;
-  LAPACK_INT n = cc->size; 
+  LAPACK_INT n = cc->size;
   LAPACK_INT mn = (m < n) ? m : n;
   LAPACK_INT MN = (m > n) ? m : n;
   phmatrix H = NULL;
@@ -76,22 +83,33 @@ constructCompressedRkMatrix(field * X, pccluster rc, pccluster cc, double eps)
   double * singular_values = malloc (sizeof (double) * m);
 
   /* Make a workspace query */
-  dgesvd_("S", "S", &m, &n, X, &m, singular_values, 
+#ifndef USE_COMPLEX
+  dgesvd_("S", "S", &m, &n, X, &m, singular_values,
 	  U, &m, Vt, &n, work, &lwork, &info);
+#else
+  double * rwork = malloc(sizeof(double) * 5 * mn);
+  zgesvd_("S", "S", &m, &n, X, &m, singular_values,
+	  U, &m, Vt, &n, work, &lwork, rwork, &info);
+  free(rwork);
+#endif
 
   /* Find out the rank */
-  while (singular_values[rank] > eps && rank < mn) { 
+  while (singular_values[rank] > eps && rank < mn) {
     rank++;
   }
 
   /* Construct the matrix */
-  H = new_rk_hmatrix (rc, cc, rank); 
+  H = new_rk_hmatrix (rc, cc, rank);
 
   /* Fill in the basis */
   memcpy (H->r->A.a, U,  sizeof(field) * rank * m);
   for (i = 0; i < rank; i++)
     for (j = 0; j < n; j++)
-      MATRIX_ELEM(H->r->B.a, j, i, n) = MATRIX_ELEM(Vt, i, j, rank) * singular_values[i]; 
+#ifdef USE_COMPLEX
+      MATRIX_ELEM(H->r->B.a, j, i, n) = conj(MATRIX_ELEM(Vt, i, j, n)) * singular_values[i];
+#else
+      MATRIX_ELEM(H->r->B.a, j, i, n) = conj(MATRIX_ELEM(Vt, i, j, n)) * singular_values[i];
+#endif
 
   free(U);
   free(Vt);
@@ -102,8 +120,8 @@ constructCompressedRkMatrix(field * X, pccluster rc, pccluster cc, double eps)
 
 phmatrix create_hmatrix_from_full (field * a, pccluster rc, pccluster cc, int lda)
 {
-  phmatrix A = NULL; 
-  int n = rc->size, i, j; 
+  phmatrix A = NULL;
+  int n = rc->size, i, j;
 
   /* Check if we are in the base case */
   if (rc->son == NULL && cc->son == NULL) {
@@ -112,11 +130,11 @@ phmatrix create_hmatrix_from_full (field * a, pccluster rc, pccluster cc, int ld
     /* Copy the content inside the full matrix */
     for (i = 0; i < rc->size; i++)
       for (j = 0; j < cc->size; j++)
-	MATRIX_ELEM(A->f->a, i, j, n) = MATRIX_ELEM(a, rc->idx[i], cc->idx[j], lda); 
+	MATRIX_ELEM(A->f->a, i, j, n) = MATRIX_ELEM(a, rc->idx[i], cc->idx[j], lda);
   }
   else {
     A = new_super_hmatrix (rc, cc, 2, 2);
-        
+
     phmatrix A11 = create_hmatrix_from_full (a, rc->son[0], cc->son[0], lda);
     phmatrix A22 = create_hmatrix_from_full (a, rc->son[1], cc->son[1], lda);
 
@@ -137,9 +155,13 @@ phmatrix create_hmatrix_from_full (field * a, pccluster rc, pccluster cc, int ld
     for (i = 0; i < rc->son[0]->size; i++) {
       for (j = 0; j < cc->son[1]->size; j++) {
 	MATRIX_ELEM(X, i, j, rc->son[0]->size) = MATRIX_ELEM(a, rc->son[0]->idx[i], cc->son[1]->idx[j], lda);
+<<<<<<< HEAD
 	printf(" %e ", MATRIX_ELEM(X, i, j, rc->son[0]->size));
       }
       printf("\n");							
+=======
+      }
+>>>>>>> 5a7717ee4b00ef9a1d3f14348a80491e0ad1494e
     }
     phmatrix A12 = constructCompressedRkMatrix(X, rc->son[0], cc->son[1], h2lib_eps);
     free(X);
@@ -148,15 +170,15 @@ phmatrix create_hmatrix_from_full (field * a, pccluster rc, pccluster cc, int ld
     ref_hmatrix(&A->son[1], A21);
     ref_hmatrix(&A->son[2], A12);
     ref_hmatrix(&A->son[3], A22);
-    
+
     update_hmatrix (A);
   }
 
-  return A; 
+  return A;
 }
 
 
-phmatrix create_tridiag_hmatrix (field * a, field * b, field * c, 
+phmatrix create_tridiag_hmatrix (field * a, field * b, field * c,
 			         			 pccluster rc, pccluster cc)
 {
   int n = rc->size;
@@ -172,7 +194,7 @@ phmatrix create_tridiag_hmatrix (field * a, field * b, field * c,
 
       memset (A->f->a, 0, sizeof (field) * n * n);
 
-      A->f->a[0] = a[0];      
+      A->f->a[0] = a[0];
       for (i = 0; i < n - 1; i++)
 	    {
 	      MATRIX_ELEM(A->f->a, i+1, i, n) = b[i];
@@ -182,13 +204,13 @@ phmatrix create_tridiag_hmatrix (field * a, field * b, field * c,
 
       update_hmatrix (A);
     }
-  else 
+  else
     {
       /* Perform subdivision */
       A = new_super_hmatrix (rc, cc, 2, 2);
 
       phmatrix A11 = create_tridiag_hmatrix (a, b, c, rc->son[0], cc->son[0]);
-      phmatrix A22 = create_tridiag_hmatrix (a + rc->son[0]->size, 
+      phmatrix A22 = create_tridiag_hmatrix (a + rc->son[0]->size,
 				             b + rc->son[0]->size,
 				             c + rc->son[0]->size,
 				             rc->son[1], cc->son[1]);
@@ -229,8 +251,8 @@ phmatrix create_band_hmatrix (double * a, double * b, double * c, int p, int q,
 
   if (rc->son == NULL && cc->son == NULL)
     {
-      
-      
+
+
       A = new_full_hmatrix (rc, cc);
 
       memset (A->f->a, 0, sizeof (double) * n * n);
@@ -256,15 +278,15 @@ phmatrix create_band_hmatrix (double * a, double * b, double * c, int p, int q,
 
       update_hmatrix (A);
     }
-  else 
+  else
     {
       /* Perform subdivision */
       A = new_super_hmatrix (rc, cc, 2, 2);
 
       phmatrix A11 = create_band_hmatrix (a, b, c, p, q, rc->son[0], cc->son[0]);
-      phmatrix A22 = create_band_hmatrix (a + rc->son[0]->size, 
+      phmatrix A22 = create_band_hmatrix (a + rc->son[0]->size,
 				             b + rc->son[0]->size * p,
-				             c + rc->son[0]->size * q, 
+				             c + rc->son[0]->size * q,
 				             p, q, rc->son[1], cc->son[1]);
 
       phmatrix A12 = new_rk_hmatrix (rc->son[0], cc->son[1], q);
@@ -284,7 +306,7 @@ phmatrix create_band_hmatrix (double * a, double * b, double * c, int p, int q,
               A12->r->B.a[i * cc->son[1]->size + j] = c[(rc->son[0]->size - i - 1)* q + j + i];
             }
         }
-      for (i=0; i<p; i++)         
+      for (i=0; i<p; i++)
         {
           A21->r->A.a[i* (rc->son[1]->size + 1)] = 1.0;
           for (j=cc->son[0]->size - p + i; j < cc->son[0]->size; j++)
@@ -334,18 +356,18 @@ phmatrix create_generators_hmatrix (double * d, double * U, double * V,  double 
                   MATRIX_ELEM(A->f->a, i, j, n) += W[i * ksup + t] * Z[j * ksup + t];
                 }
             }
-          MATRIX_ELEM(A->f->a, i, i, n) = d[i];	
+          MATRIX_ELEM(A->f->a, i, i, n) = d[i];
 	}
 
       update_hmatrix (A);
     }
-  else 
+  else
     {
       /* Perform subdivision */
       A = new_super_hmatrix (rc, cc, 2, 2);
 
       phmatrix A11 = create_generators_hmatrix (d,U,V,W,Z,ksub,ksup, rc->son[0], cc->son[0]);
-      phmatrix A22 = create_generators_hmatrix (d + rc->son[0]->size, 
+      phmatrix A22 = create_generators_hmatrix (d + rc->son[0]->size,
 				             U + rc->son[0]->size * ksub,
 				             V + cc->son[0]->size * ksub,
 				             W + rc->son[0]->size * ksup,
@@ -414,7 +436,7 @@ trace_amatrix(pamatrix a)
 {
   LAPACK_INT      rows = a->rows;
   LAPACK_INT lda = a->ld;
-  field trace = 0.0;  
+  field trace = 0.0;
   uint      j;
 
   for (j = 0; j < rows; j++) {
@@ -446,14 +468,14 @@ void scale_hmatrix (field r, phmatrix H)
   if (H->f) {
     scale_amatrix (r, H->f);
   }
-  
+
   if (H->r) {
     scale_amatrix (r, &H->r->A);
   }
-  
+
   if (H->son) {
     int i, j;
-    
+
     for (i = 0; i < H->rsons * H->csons; i++)
       scale_hmatrix (r, H->son[i]);
   }
@@ -463,14 +485,14 @@ void shift_hmatrix (field r, phmatrix H)
 {
   if (H->f) {
     int i;
-    
+
     for (i = 0; i < H->rc->size; i++)
       setentry_amatrix (H->f, i, i, getentry_amatrix (H->f, i, i) + r);
   }
-  
+
   if (H->son) {
     int i;
-    
+
     for (i = 0; i < H->rsons * H->csons; i++)
       shift_hmatrix (r, H->son[i]);
   }

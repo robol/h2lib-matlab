@@ -155,13 +155,7 @@ phmatrix create_hmatrix_from_full (field * a, pccluster rc, pccluster cc, int ld
     for (i = 0; i < rc->son[0]->size; i++) {
       for (j = 0; j < cc->son[1]->size; j++) {
 	MATRIX_ELEM(X, i, j, rc->son[0]->size) = MATRIX_ELEM(a, rc->son[0]->idx[i], cc->son[1]->idx[j], lda);
-<<<<<<< HEAD
-	printf(" %e ", MATRIX_ELEM(X, i, j, rc->son[0]->size));
       }
-      printf("\n");							
-=======
-      }
->>>>>>> 5a7717ee4b00ef9a1d3f14348a80491e0ad1494e
     }
     phmatrix A12 = constructCompressedRkMatrix(X, rc->son[0], cc->son[1], h2lib_eps);
     free(X);

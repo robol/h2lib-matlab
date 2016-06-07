@@ -80,6 +80,7 @@ BASE_DIR=$(pwd)
 
 echo "MATLAB_CMD=$MATLAB_CMD" > Makefile.inc
 echo "BASE_DIR=$BASE_DIR" >> Makefile.inc
+echo "include \$(BASE_DIR)/H2Lib/options.inc" >> Makefile.inc
 echo "MEX=$MEX" >> Makefile.inc
 echo "MEX_EXT=$MEX_EXT" >> Makefile.inc
 echo "CFLAGS= -fPIC -g -I\$(BASE_DIR)/H2Lib/Library -I\$(BASE_DIR)/lib -DLAPACK_USE_LONGS" >> Makefile.inc
@@ -87,6 +88,9 @@ echo "MATLAB_CFLAGS= -D__MATLAB_TRICK" >> Makefile.inc
 echo "LDFLAGS= -L\$(BASE_DIR)/lib -L\$(BASE_DIR)/H2Lib -Wl,-R\$(BASE_DIR)/H2Lib -Wl,-R\$(BASE_DIR)/lib -shared" >> Makefile.inc 
 echo "LIBS= -lh2" >> Makefile.inc
 echo "MEX_LIBS= -lhmatlab" >> Makefile.inc
+echo "ifdef USE_COMPLEX" >> Makefile.inc
+echo "  CFLAGS += -DUSE_COMPLEX" >> Makefile.inc
+echo "endif" >> Makefile.inc
 
 echo "Configuration completed. Printing the content of Makefile.inc. Please adjust"
 echo "the constants if needed."

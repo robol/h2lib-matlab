@@ -1,5 +1,9 @@
 -include Makefile.inc
 
+ifdef USE_COMPLEX
+  CFLAGS += -DUSE_COMPLEX
+endif
+
 all: Makefile.inc hmatlab hmatrix cluster h2matrix
 
 Makefile.inc:

@@ -17,7 +17,8 @@ MEX_FILES = \
     hmatrix_shift$(MEX_EXT)            \
     band$(MEX_EXT)                     \
     generators$(MEX_EXT) \
-    hmatrix_from_full$(MEX_EXT)
+    hmatrix_from_full$(MEX_EXT) 	\
+    hmatrix_leading$(MEX_EXT)
 
 all: $(MEX_FILES)
 

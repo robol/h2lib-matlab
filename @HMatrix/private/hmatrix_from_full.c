@@ -33,7 +33,8 @@ void mexFunction (int nlhs, mxArray * plhs[],
 
     /* This is implemented inside libhmalab, and performs recursive SVDs
      * to find the correct ranks. */
-    phmatrix H = create_hmatrix_from_full ((field*) A, rowCluster, colCluster, mxGetN(prhs[1]));
+    phmatrix H = NULL;
+    ref_hmatrix (&H, create_hmatrix_from_full ((field*) A, rowCluster, colCluster, mxGetN(prhs[1])));
 
 #ifdef USE_COMPLEX
     mxFree(A);

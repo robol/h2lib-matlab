@@ -32,7 +32,8 @@ void mexFunction(int nlhs, mxArray *plhs[],
   	c[i] = r_c[i] + I * (i_c ? i_c[i] : 0);
   }
 
-  phmatrix A = create_tridiag_hmatrix (a, b, c, rc, cc);
+  phmatrix A = NULL;
+  ref_hmatrix(&A, create_tridiag_hmatrix (a, b, c, rc, cc));
 				  
   free (a);
   free (b);

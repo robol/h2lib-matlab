@@ -7,5 +7,5 @@ void mexFunction (int nlhs, mxArray* plhs[],
 {
   phmatrix H = DESERIALIZE_POINTER (mxGetProperty (prhs[0], 0, "hmatrix"));
 
-  del_hmatrix(H);
+  unref_hmatrix(H);
 }

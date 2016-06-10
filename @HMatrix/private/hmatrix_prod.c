@@ -22,7 +22,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
   double * a = malloc (A->rc->size * sizeof(double));
   memset (a, 0, sizeof(double) * A->rc->size);
 
-  C = create_real_tridiag_hmatrix (a, a, a, A->rc, A->cc);
+  ref_hmatrix(&C,  create_real_tridiag_hmatrix (a, a, a, A->rc, A->cc)); 
   free (a);
 
   addmul_hmatrix(FIELD_ONE, false, A, false, B, tm, h2lib_eps, C);

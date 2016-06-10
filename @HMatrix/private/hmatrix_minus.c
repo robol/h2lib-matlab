@@ -14,7 +14,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
 
   ptruncmode tm = new_releucl_truncmode();
 
-  phmatrix C = clone_hmatrix (A);
+  phmatrix C = NULL; ref_hmatrix(&C,clone_hmatrix (A));
 
   add_hmatrix(- FIELD_ONE, B, tm, h2lib_eps, C);
 

@@ -74,6 +74,9 @@ phmatrix create_tridiag_hmatrix (field * a, field * b, field * c,
 phmatrix create_band_hmatrix (double * a, double * b, double * c, int p, int q,
 			         pccluster rc, pccluster cc);
 
+
+pcluster shift_cluster(pccluster original_cluster, int shift); 
+
 /**
  * @brief Create a hierarichal matrix representing a (U^t,V^t,W^t,Z^t)-generator matrix ( i.e. tril(A)= U^t V, triu(A)=W^t Z and diag(A)=d )
  * 

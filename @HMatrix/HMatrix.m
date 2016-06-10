@@ -41,6 +41,7 @@ classdef HMatrix < handle
                         obj.row_cluster = varargin{2};
                         obj.col_cluster = varargin{3};
                     case 'band'
+
                         create_band_hmatrix(obj, varargin{:});
                     case 'generators'
                         if (length(varargin) < 10)

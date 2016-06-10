@@ -18,7 +18,8 @@ MEX_FILES = \
     band$(MEX_EXT)                     \
     generators$(MEX_EXT) \
     hmatrix_from_full$(MEX_EXT) 	\
-    hmatrix_leading$(MEX_EXT)
+    hmatrix_leading$(MEX_EXT)		\
+    hmatrix_trailing$(MEX_EXT)
 
 all: $(MEX_FILES)
 

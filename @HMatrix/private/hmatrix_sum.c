@@ -16,7 +16,8 @@ void mexFunction(int nlhs, mxArray *plhs[],
   phmatrix B = DESERIALIZE_POINTER (mxGetProperty (prhs[1], 0, "hmatrix"));
   ptruncmode tm = new_releucl_truncmode();
 
-  phmatrix C = clone_hmatrix (B);
+  phmatrix C = NULL;  ref_hmatrix(&C, clone_hmatrix( B) );
+ 
   real eps = h2lib_eps;
 
   /* printf ("Passing eps = %e\n", h2lib_eps); */

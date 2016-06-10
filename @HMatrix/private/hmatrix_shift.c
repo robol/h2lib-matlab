@@ -6,7 +6,8 @@ void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
   phmatrix A = DESERIALIZE_POINTER (mxGetProperty (prhs[0], 0, "hmatrix"));
-  phmatrix Ar = clone_hmatrix (A);
+  phmatrix Ar = NULL;
+  ref_hmatrix(&Ar,clone_hmatrix (A));
   
   field r = *mxGetPr(prhs[1]);
   

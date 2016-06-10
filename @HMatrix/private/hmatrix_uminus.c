@@ -45,7 +45,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
   phmatrix A = DESERIALIZE_POINTER (mxGetProperty (prhs[0], 0, "hmatrix"));
-  phmatrix C = clone_hmatrix (A);
+  phmatrix C = NULL; ref_hmatrix(&C,clone_hmatrix (A));
 
   change_sign (C);
 

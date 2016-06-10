@@ -10,12 +10,14 @@ void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
   phmatrix A = DESERIALIZE_POINTER (mxGetProperty (prhs[0], 0, "hmatrix"));
-  phmatrix Ainv = clone_hmatrix (A);
+  phmatrix Ainv = NULL;
+  ref_hmatrix(&Ainv ,clone_hmatrix (A));
 
   /* Allocate space for the inversion */
   double * a = malloc (sizeof(double) * A->rc->size);
   memset (a, 0, sizeof(double) * A->rc->size);
-  phmatrix B = create_real_tridiag_hmatrix(a,a,a,A->rc,A->cc);
+  phmatrix B = NULL;
+  ref_hmatrix(&B, create_real_tridiag_hmatrix(a,a,a,A->rc,A->cc));
   free (a);
 
   ptruncmode  tm;
@@ -23,7 +25,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
 
   invert_hmatrix (Ainv, B, tm, h2lib_eps);
 
-  del_hmatrix (B);
+  unref_hmatrix (B);
 
   SERIALIZE_POINTER (plhs[0], Ainv);
 }

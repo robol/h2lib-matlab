@@ -1,7 +1,7 @@
 #include "hmatlab.h"
 #include <complex.h>
 #include <string.h>
-
+#include <cluster.h>
 #define MATRIX_ELEM(A,i,j,n) A[(j)*(n)+(i)]
 
 pcluster std_subdivision_scheme_cluster(int *a, int n, int k)
@@ -233,6 +233,21 @@ phmatrix create_tridiag_hmatrix (field * a, field * b, field * c,
 
   return A;
 }
+
+pcluster shift_cluster(pccluster original_cluster, int shift) 
+
+{ 
+int i;
+
+pcluster newcluster = new_cluster(original_cluster->size, original_cluster->idx + shift, original_cluster->sons, original_cluster->dim);
+
+for ( i = 0; i < original_cluster-> sons; i++)
+		newcluster->son[i]=shift_cluster(original_cluster->son[i], shift);
+
+return newcluster;
+
+}
+
 
 phmatrix create_band_hmatrix (double * a, double * b, double * c, int p, int q,
 			         pccluster rc, pccluster cc)

@@ -10,7 +10,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
   phmatrix A = DESERIALIZE_POINTER (mxGetProperty (prhs[0], 0, "hmatrix"));
-  phmatrix Ascaled = clone_hmatrix (A);
+  phmatrix Ascaled = NULL; ref_hmatrix(&Ascaled, clone_hmatrix (A));
   
   double * sr = mxGetPr(prhs[1]);
   double * si = mxGetPi(prhs[1]);

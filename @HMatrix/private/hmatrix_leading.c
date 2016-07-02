@@ -18,4 +18,5 @@ void mexFunction(int nlhs, mxArray *plhs[],
   SERIALIZE_POINTER_TO_PROPERTY(prhs[1], "hmatrix", Al);
   SERIALIZE_POINTER_TO_PROPERTY(prhs[2], "cluster", lrc);
   SERIALIZE_POINTER_TO_PROPERTY(prhs[3], "cluster", lcc);
+
 } 

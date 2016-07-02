@@ -19,7 +19,9 @@ MEX_FILES = \
     generators$(MEX_EXT) \
     hmatrix_from_full$(MEX_EXT) 	\
     hmatrix_leading$(MEX_EXT)		\
-    hmatrix_trailing$(MEX_EXT)
+    hmatrix_trailing$(MEX_EXT)		\
+    hmatrix_zero_row$(MEX_EXT)         \
+    hmatrix_LU$(MEX_EXT)
 
 all: $(MEX_FILES)
 

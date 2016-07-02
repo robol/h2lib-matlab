@@ -18,16 +18,19 @@ void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
   phmatrix A = DESERIALIZE_POINTER (mxGetProperty (prhs[0], 0, "hmatrix"));
+  pcluster lrc = DESERIALIZE_POINTER (mxGetProperty (prhs[2],0, "cluster"));
+  pcluster lcc = DESERIALIZE_POINTER (mxGetProperty (prhs[3],0, "cluster"));
 
   /* Get the leading block of A, and the associated cluster trees. */
   phmatrix Al = NULL;
   ref_hmatrix(&Al, clone_hmatrix(A->son[3]));
  
+
    
- pcluster lrc = shift_cluster(Al->rc, -Al->rc->idx[0]); 
+ /*pcluster lrc = shift_cluster(Al->rc, -Al->rc->idx[0]); 
  update_cluster(lrc); 
  pcluster lcc = shift_cluster(Al->cc, -Al->cc->idx[0]);
-update_cluster(lcc); 
+ update_cluster(lcc); */
  replace_clusters(Al,lrc,lcc);
   
   
@@ -36,5 +39,3 @@ update_cluster(lcc);
   SERIALIZE_POINTER_TO_PROPERTY(prhs[2], "cluster", lrc);
   SERIALIZE_POINTER_TO_PROPERTY(prhs[3], "cluster", lcc);
 } 
-
-

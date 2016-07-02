@@ -1,8 +1,6 @@
-function Hl = trailing(H)    
+function Hl = trailing(H,rc,cc)    
     Hl = HMatrix();
-    Hl.row_cluster = Cluster();
-    Hl.row_cluster.parent = H.row_cluster;
-    Hl.col_cluster = Cluster();   
-    Hl.col_cluster.parent = H.col_cluster;
+    Hl.row_cluster = rc;
+    Hl.col_cluster = cc;    
     hmatrix_trailing(H, Hl, Hl.row_cluster, Hl.col_cluster);
 end

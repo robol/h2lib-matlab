@@ -1,4 +1,21 @@
 function b=subsrefs(a,s)
+  indices = s.subs;
+  if (max(size(a)) > 1) && (strcmp(s.type, '()'))
+    b = a(indices{:});
+    return;
+  end
+
+  if s.type == '.'
+    if s.subs == 'row_cluster'
+      b = a.row_cluster;
+    end
+    if s.subs == 'col_cluster'
+      b = a.col_cluster;
+    end
+
+    return;
+  end
+
   if s.type ~= '()'
     error('Unsupported selection method for HMatrix');
   end

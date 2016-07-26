@@ -31,14 +31,14 @@ void mexFunction(int nlhs, mxArray *plhs[],
     ones[i] = 1.0;
   
   
-  ph2matrix I = create_tridiag_h2matrix (ones, zeros, zeros, B->rb->t, B->cb->t, NULL, NULL);
+  ph2matrix ID = create_tridiag_h2matrix (ones, zeros, zeros, B->rb->t, B->cb->t, NULL, NULL);
   
-  addmul_h2matrix (-1.0, I, false, B, C, rop, cop, tm, h2lib_eps);
+  addmul_h2matrix (-1.0, ID, false, B, C, rop, cop, tm, h2lib_eps);
 
   free (ones);
   free (zeros);
 
-  del_h2matrix (I);
+  del_h2matrix (ID);
   del_clusteroperator (cop);
   del_clusteroperator (rop);
 

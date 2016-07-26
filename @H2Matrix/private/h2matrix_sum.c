@@ -32,14 +32,14 @@ void mexFunction(int nlhs, mxArray *plhs[],
 
   pclusterbasis ircb = clone_clusterbasis (A->cb);
   pclusterbasis iccb = clone_clusterbasis (A->rb);
-  ph2matrix I = create_tridiag_h2matrix (ones, zeros, zeros, A->cb->t, A->rb->t, ircb, iccb);
+  ph2matrix ID = create_tridiag_h2matrix (ones, zeros, zeros, A->cb->t, A->rb->t, ircb, iccb);
   
-  addmul_h2matrix (1.0, I, false, A, C, rop, cop, tm, h2lib_eps);
+  addmul_h2matrix (1.0, ID, false, A, C, rop, cop, tm, h2lib_eps);
 
   free (ones);
   free (zeros);
 
-  del_h2matrix (I);
+  del_h2matrix (ID);
   del_clusteroperator (cop);
   del_clusteroperator (rop);
 

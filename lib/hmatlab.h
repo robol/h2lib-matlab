@@ -9,7 +9,7 @@
 #ifndef _HMATLAB_H
 #define _HMATLAB_H
 
-#define h2lib_eps (getenv("H2LIB_EPS") == NULL ? 1.0e-13 : strtod(getenv("H2LIB_EPS"), NULL))
+#define h2lib_eps (getenv("H2LIB_EPS") == NULL ? 1.0e-16 : strtod(getenv("H2LIB_EPS"), NULL))
 
 #ifdef USE_COMPLEX
 #include <complex.h>

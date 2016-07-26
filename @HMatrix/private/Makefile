@@ -13,6 +13,7 @@ MEX_FILES = \
     hmatrix_uminus$(MEX_EXT)	       \
     hmatrix_mldivide$(MEX_EXT)         \
     hmatrix_mldivide_full$(MEX_EXT)    \
+    hmatrix_prod_full$(MEX_EXT)        \
     hmatrix_scale$(MEX_EXT)            \
     hmatrix_shift$(MEX_EXT)            \
     band$(MEX_EXT)                     \

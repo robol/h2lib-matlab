@@ -16,7 +16,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
      phmatrix A = DESERIALIZE_POINTER (mxGetProperty (prhs[0], 0, "hmatrix"));
      amatrix am;
      ptruncmode tm = new_releucl_truncmode();
-     phmatrix Alr=clone_hmatrix(A);
+     phmatrix Alr = clone_hmatrix(A);
 
      lrdecomp_hmatrix(Alr,tm,h2lib_eps);
      
@@ -33,20 +33,18 @@ void mexFunction(int nlhs, mxArray *plhs[],
      double * or = mxGetPr(plhs[0]);
      double * oi = mxGetPi(plhs[0]);
 
-     am.rows = m;
-     am.cols = n;
-     am.ld   = m;
-     am.owner = NULL;     
+     init_amatrix(&am, m, n);
      
      /* Take a copy of the result, so we have it in the correct HMatrix format. */
-	am.a = mxMalloc (sizeof (field) * n * m);
+     /* am.a = mxMalloc (sizeof (field) * n * m); */
 	
-	for (i = 0; i < m * n; i++)
+     for (i = 0; i < m * n; i++) {
 #ifdef USE_COMPLEX	
-	    am.a[i] = mr[i] + I * (mi ? mi[i] : 0.0);     
+	 am.a[i] = mr[i] + I * (mi ? mi[i] : 0.0);     
 #else
-  	    am.a[i] = mr[i];     
+	 am.a[i] = mr[i];     
 #endif
+     }
 
      triangularinvmul_hmatrix_amatrix (true, true, false, Alr, false, &am);
      triangularinvmul_hmatrix_amatrix (false, false, false, Alr, false, &am);
@@ -61,6 +59,6 @@ void mexFunction(int nlhs, mxArray *plhs[],
 #endif     
 	 }
 	 
-	 mxFree (am.a);
+     uninit_amatrix(&am);
      del_hmatrix(Alr);
 }

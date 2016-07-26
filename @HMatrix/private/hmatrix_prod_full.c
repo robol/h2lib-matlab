@@ -15,6 +15,8 @@ void mexFunction(int nlhs, mxArray *plhs[],
      int i;
      int dims[] = { m, n };
 
+     mexPrintf("m = %d, n = %d\n", m, n);
+
      phmatrix A = DESERIALIZE_POINTER (mxGetProperty (prhs[0], 0, "hmatrix"));
      amatrix am, sm;
      
@@ -33,13 +35,13 @@ void mexFunction(int nlhs, mxArray *plhs[],
 
      double * or = mxGetPr(plhs[0]);
      double * oi = mxGetPi(plhs[0]);
-     
-     init_pointer_amatrix(&am, or, m, n);
 
 #ifndef USE_COMPLEX
      init_pointer_amatrix(&sm, sr, m, n);
+     init_pointer_amatrix(&am, or, m, n);
 #else
-     init_amatrix(&sm, m, n);
+     init_amatrix(&sm, m, n);        
+     init_amatrix(&am, m, n);
      for (i = 0; i < m * n; i++) {
 	 sm.a[i] = sr[i] + I * (si ? si[i] : 0.0);     
      }

@@ -15,8 +15,6 @@ void mexFunction(int nlhs, mxArray *plhs[],
      int i;
      int dims[] = { m, n };
 
-     mexPrintf("m = %d, n = %d\n", m, n);
-
      phmatrix A = DESERIALIZE_POINTER (mxGetProperty (prhs[0], 0, "hmatrix"));
      amatrix am, sm;
      

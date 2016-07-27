@@ -36,15 +36,15 @@ void mexFunction(int nlhs, mxArray *plhs[],
      double * or = mxGetPr(plhs[0]);
      double * oi = mxGetPi(plhs[0]);
 
-#ifndef USE_COMPLEX
-     init_pointer_amatrix(&sm, sr, m, n);
-     init_pointer_amatrix(&am, or, m, n);
-#else
-     init_amatrix(&sm, m, n);        
+#ifdef USE_COMPLEX
+     init_amatrix(&sm, m, n);     
      init_amatrix(&am, m, n);
      for (i = 0; i < m * n; i++) {
 	 sm.a[i] = sr[i] + I * (si ? si[i] : 0.0);     
      }
+#else
+     init_pointer_amatrix(&sm, sr, m, n);
+     init_pointer_amatrix(&am, or, m, n);
 #endif
 
      memset (am.a, 0, sizeof(field) * m * n);
@@ -59,5 +59,5 @@ void mexFunction(int nlhs, mxArray *plhs[],
 
      uninit_amatrix(&am);
      uninit_amatrix(&sm);
-
+     del_hmatrix(Alr);
 }

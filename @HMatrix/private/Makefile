@@ -22,7 +22,9 @@ MEX_FILES = \
     hmatrix_leading$(MEX_EXT)		\
     hmatrix_trailing$(MEX_EXT)		\
     hmatrix_zero_row$(MEX_EXT)         \
-    hmatrix_LU$(MEX_EXT)
+    hmatrix_LU$(MEX_EXT)               \
+    hmatrix_northeast$(MEX_EXT)        \
+    hmatrix_southwest$(MEX_EXT)
 
 all: $(MEX_FILES)
 
